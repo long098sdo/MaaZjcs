@@ -1,0 +1,387 @@
+{
+    "StartUp": {
+        "post_wait_freezes": 1000,
+        "timeout": 60000,
+        "next": [
+            "[JumpBack]CancelFortuneFruitSpend",
+            "GameAlreadyRunningOverlay",
+            "GameAlreadyRunningMainTab",
+            "[JumpBack]HomeLoading",
+            "[JumpBack]TextLoading",
+            "[JumpBack]Loading",
+            "[JumpBack]DownLoading",
+            "[JumpBack]ConfirmButton",
+            "[JumpBack]Login",
+            "[JumpBack]CloseAnnouncement",
+            "[JumpBack]EnterGame",
+            "[JumpBack]CloseGift",
+            "GameAlreadyRunningInnerPage",
+            "HomePage", // 游戏启动结束，进入主页面
+            "StartGame"
+        ]
+    },
+    "StartGame": {
+        "timeout": 60000,
+        "recognition": {
+            "type": "DirectHit"
+        },
+        "action": {
+            "type": "StartApp",
+            "param": {
+                "package": "com.leiting.zjcs"
+            }
+        },
+        "next": [
+            "GameAlreadyRunningOverlay",
+            "[JumpBack]HomeLoading",
+            "[JumpBack]TextLoading",
+            "[JumpBack]Loading",
+            "[JumpBack]DownLoading",
+            "[JumpBack]ConfirmButton",
+            "[JumpBack]Login",
+            "[JumpBack]CloseAnnouncement",
+            "[JumpBack]EnterGame",
+            "[JumpBack]CloseGift",
+            "GameAlreadyRunningMainTab",
+            "GameAlreadyRunningInnerPage",
+            "HomePage" // 游戏启动结束，进入主页面
+        ]
+    },
+    "GameAlreadyRunningOverlay": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [260,250,450,180],
+                "expected": ["玩家编号", "添加好友", "^更多$"]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": { "target": [690,80,20,20] }
+        },
+        "focus": {
+            "Node.Recognition.Succeeded": {
+                "content": "检测到游戏内弹窗，确认游戏已经启动",
+                "display": ["log"]
+            }
+        },
+        "post_delay": 800,
+        "next": ["GameAlreadyRunningMainTab", "GameAlreadyRunningInnerPage", "HomePage"]
+    },
+    "GameAlreadyRunningMainTab": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [0, 1140, 720, 140],
+                "template": [
+                    "button/home.png",
+                    "button/note.png",
+                    "button/world.png",
+                    "button/guild.png",
+                    "button/character.png"
+                ]
+            }
+        },
+        "action": {
+            "type": "DoNothing"
+        },
+        "focus": {
+            "Node.Recognition.Succeeded": {
+                "content": "检测到游戏已启动，跳过启动流程",
+                "display": ["log"]
+            }
+        },
+        "next": ["End"]
+    },
+    "GameAlreadyRunningInnerPage": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [0, 1140, 720, 140],
+                "template": [
+                    "button/leave_button1.png",
+                    "button/leave_button2.png",
+                    "button/leave_button3.png",
+                    "button/leave_button4.png",
+                    "button/leave_button5.png"
+                ]
+            }
+        },
+        "action": {
+            "type": "DoNothing"
+        },
+        "focus": {
+            "Node.Recognition.Succeeded": {
+                "content": "检测到游戏已启动，跳过启动流程",
+                "display": ["log"]
+            }
+        },
+        "next": ["End"]
+    },
+    "HomeLoading": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    284,
+                    563,
+                    151,
+                    154
+                ],
+                "template": [
+                    "home_icon.png"
+                ]
+            }
+        },
+        "next": [
+            "WaitHomeLoadingGone"
+        ],
+        "timeout": 60000,
+        "on_error": [
+            "StuckHandler"
+        ]
+    },
+    "TextLoading": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    236,
+                    417,
+                    264,
+                    47
+                ],
+                "expected": [
+                    "健康游戏忠告"
+                ],
+                "only_rec": true
+            }
+        },
+        "next": [
+            "WaitTextLoadingGone"
+        ],
+        "timeout": 60000,
+        "on_error": [
+            "StuckHandler"
+        ]
+    },
+    "DownLoading": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    183,
+                    978,
+                    102,
+                    30
+                ],
+                "expected": [
+                    "下载"
+                ]
+            }
+        },
+        "next": [
+            "WaitDownLoadingGone"
+        ],
+        "timeout": 600000, // 持续等待10分钟下载
+        "on_error": [
+            "StuckHandler"
+        ]
+    },
+    "ConfirmButton": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    233,
+                    707,
+                    254,
+                    73
+                ],
+                "expected": [
+                    "确定"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "WaitConfirmButtonGone"
+        ],
+        "timeout": 60000,
+        "on_error": [
+            "StuckHandler"
+        ]
+    },
+    "Login": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    183,
+                    728,
+                    353,
+                    67
+                ],
+                "expected": [
+                    "登录",
+                    "注册"
+                ]
+            }
+        },
+        "focus": {
+            "Node.Recognition.Succeeded": {
+                "content": "检测到登录页面，请先登录",
+                "display": [
+                    "log",
+                    "toast"
+                ]
+            }
+        },
+        "next": [
+            "WaitLoginGone"
+        ],
+        "timeout": 120000, // 2分钟登录时间
+        "on_error": [
+            "StuckHandler"
+        ]
+    },
+    "CloseAnnouncement": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    319,
+                    71,
+                    80,
+                    50
+                ],
+                "expected": [
+                    "公告"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    38,
+                    1195,
+                    73,
+                    49
+                ]
+            }
+        }
+    },
+    "EnterGame": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    178,
+                    1037,
+                    345,
+                    44
+                ],
+                "expected": "开始游戏"
+            }
+        },
+        "action": {
+            "type": "Click"
+        }
+    },
+    "Shutdown": {
+        "action": {
+            "type": "StopApp",
+            "param": {
+                "package": "com.leiting.zjcs"
+            }
+        }
+    },
+    "WaitHomeLoadingGone": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    284,
+                    563,
+                    151,
+                    154
+                ],
+                "template": "home_icon.png"
+            }
+        },
+        "inverse": true
+    },
+    "WaitTextLoadingGone": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    236,
+                    417,
+                    264,
+                    47
+                ],
+                "expected": [
+                    "健康游戏忠告"
+                ],
+                "only_rec": true
+            }
+        },
+        "inverse": true
+    },
+    "WaitDownLoadingGone": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    183,
+                    978,
+                    102,
+                    30
+                ],
+                "expected": [
+                    "下载"
+                ]
+            }
+        },
+        "inverse": true
+    },
+    "WaitConfirmButtonGone": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    233,
+                    707,
+                    254,
+                    73
+                ],
+                "expected": [
+                    "确定"
+                ]
+            }
+        },
+        "inverse": true
+    },
+    "WaitLoginGone": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    183,
+                    728,
+                    353,
+                    67
+                ],
+                "expected": [
+                    "登录",
+                    "注册"
+                ]
+            }
+        },
+        "inverse": true
+    }
+}

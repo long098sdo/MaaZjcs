@@ -1,0 +1,63 @@
+{
+    "CountryGacha": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "country_gacha_runner",
+                "custom_action_param": {
+                    "国度蓝券": 0,
+                    "国度紫券": 0,
+                    "国度橙券": 0,
+                    "国度金券": 0
+                }
+            }
+        },
+        "next": [
+            "NavigationRecovery"
+        ]
+    },
+    "GachaTargetBlue": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "country_gacha_runner",
+                "custom_action_param": {
+                    "value": -1
+                }
+            }
+        }
+    },
+    "GachaTargetPurple": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "country_gacha_runner",
+                "custom_action_param": {
+                    "value": -1
+                }
+            }
+        }
+    },
+    "GachaTargetOrange": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "country_gacha_runner",
+                "custom_action_param": {
+                    "value": -1
+                }
+            }
+        }
+    },
+    "GachaTargetGold": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "country_gacha_runner",
+                "custom_action_param": {
+                    "value": -1
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,240 @@
+{
+    "Bed": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "verification_checkpoint",
+                "custom_action_param": { "task": "领取床", "operation": "reset" }
+            }
+        },
+        "next": [
+            "[JumpBack]CancelFortuneFruitSpend",
+            "[JumpBack]LeaveCurrentPage",
+            "[JumpBack]CloseGift",
+            "[JumpBack]CloseByClickBlank",
+            "[JumpBack]CardPage",
+            "[JumpBack]HomePage",
+            "SearchBedRight"
+        ]
+    },  
+    "SearchBedRight": {
+        "next": [
+            "OpenBed",
+            "RightEdgeInSearchBed",
+            "[JumpBack]SwipeRight"
+        ]
+    },
+    "SearchBedLeft": {
+        "next": [
+            "OpenBed",
+            "LeftEdgeInSearchBed",
+            "[JumpBack]SwipeLeft"
+        ]
+    },
+    "LeftEdgeInSearchBed": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "template": [
+                    "furniture/airship1.png",
+                    "furniture/airship2.png",
+                    "furniture/airship3.png"
+                ]
+            }
+        }
+    },
+    "RightEdgeInSearchBed": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "template": [
+                    "furniture/fireplace_light1.png",
+                    "furniture/fireplace_light_snow1.png",
+                    "furniture/fireplace_night1.png",
+                    "furniture/fireplace_night2.png",
+                    "furniture/fireplace_night_snow1.png",
+                    "furniture/fireplace_night_snow2.png"
+                ]
+            }
+        },
+        "next": [
+            "SearchBedLeft"
+        ]
+    },
+    "OpenBed": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "template": [
+                    "furniture/bed_night1.png",
+                    "furniture/bed_night2.png",
+                    "furniture/bed_light1.png",
+                    "furniture/bed_light2.png",
+                    "furniture/bed_light3.png",
+                    "furniture/bed_night_current.png"
+                ],
+                "threshold": [
+                    0.9
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target_offset": [8,8,-16,-16]
+            }
+        },
+        "next": [
+            "[JumpBack]CloseGift",
+            "FreeAcceleration",
+            "BedAlreadyCompleted",
+            "OpenBed",
+            "VerifyBedCompleted"
+        ],
+        "post_delay": 2000,
+        "max_hit": 3
+    },
+    "FreeAcceleration": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "免费加速"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [350,1032,22,16]
+            }
+        },
+        "next": [
+            "ReceiveBedPrize",
+            "[JumpBack]ConfirmAcceleration",
+            "BedReturnedHome",
+            "BedAlreadyCompleted",
+            "VerifyBedCompleted"
+        ],
+        "post_delay": 2000
+    },
+    "ConfirmAcceleration": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "确定"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target_offset": [8,5,-16,-10]
+            }
+        },
+        "next": [
+            "ReceiveBedPrize",
+            "BedReturnedHome",
+            "BedAlreadyCompleted",
+            "VerifyBedCompleted"
+        ],
+        "post_delay": 1200
+    },
+    "ReceiveBedPrize": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [177,334,375,81],
+                "expected": ["获得奖励"]
+            }
+        },
+        "action": { "type": "Click" },
+        "next": ["MarkBedCompleted"],
+        "post_delay": 800
+    },
+    "BedReturnedHome": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [300,1140,120,130],
+                "template": "button/home.png"
+            }
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "verification_checkpoint",
+                "custom_action_param": { "task": "领取床", "operation": "mark", "checkpoint": "床奖励已领取或当前无免费次数" }
+            }
+        },
+        "next": ["VerifyBedCompleted"]
+    },
+    "BedAlreadyCompleted": {
+        "recognition": {
+            "type": "OCR",
+            "param": { "expected": ["全局加速"] }
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "verification_checkpoint",
+                "custom_action_param": { "task": "领取床", "operation": "mark", "checkpoint": "床奖励已领取或当前无免费次数" }
+            }
+        },
+        "next": ["CloseBedPage"]
+    },
+    "MarkBedCompleted": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "verification_checkpoint",
+                "custom_action_param": { "task": "领取床", "operation": "mark", "checkpoint": "床奖励已领取或当前无免费次数" }
+            }
+        },
+        "next": ["CloseBedPage"]
+    },
+    "CloseBedPage": {
+        "action": {
+            "type": "Click",
+            "param": { "target": [690,80,20,20] }
+        },
+        "next": ["VerifyBedCompleted"],
+        "post_delay": 800
+    },
+    "VerifyBedCompleted": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "verification_checkpoint",
+                "custom_action_param": {
+                    "task": "领取床",
+                    "operation": "verify",
+                    "required": ["床奖励已领取或当前无免费次数"]
+                }
+            }
+        },
+        "focus": {
+            "Node.Action.Failed": {
+                "content": "领取床复核失败：未确认奖励已领取，也未确认免费次数已用完",
+                "display": ["log", "toast"]
+            }
+        }
+    },
+    "GlobalAccelaration": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "全局加速"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [346,1138,18,16]
+            }
+        }
+    }
+}

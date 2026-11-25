@@ -1,0 +1,306 @@
+{
+    "Arena": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "verification_checkpoint",
+                "custom_action_param": { "task": "竞技场", "operation": "reset" }
+            }
+        },
+        "next": [
+            "ArenaPrepareMain"
+        ]
+    },
+    "ArenaPrepareMain": {
+        "action": { "type": "Custom", "param": { "custom_action": "navigation_guard" } },
+        "next": [
+            "[JumpBack]CancelFortuneFruitSpend",
+            "[JumpBack]LeaveCurrentPage",
+            "[JumpBack]CloseGift",
+            "[JumpBack]CloseByClickBlank",
+            "[JumpBack]CardPage",
+            "[JumpBack]NotePage",
+            "OpenArenaPage"
+        ]
+    },
+    "OpenArenaPage": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [7,706,404,194],
+                "expected": [
+                    "竞技"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "EnterArena"
+        ],
+        "post_delay": 2000
+    },
+    "EnterArena": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [27,133,667,258],
+                "expected": [
+                    "竞技场"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "post_delay": 2000,
+        "next": [
+            "[JumpBack]Settlement",  // 每周的结算
+            "[JumpBack]SelectAttackSlot",  // 选择进攻对象
+            "VerifyArenaCompleted"
+        ]
+    },
+    "Settlement": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [196,413,325,115],
+                "expected": [
+                    "竞技场结算"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [283,848,164,43]
+            }
+        },
+        "next": [
+            "ReceivePrize" // 领奖
+        ]
+    },
+    "SelectAttackSlot": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [14,514,158,59],
+                "expected": [
+                    "选择对手",
+                    "选择対手"
+                ]
+            }
+        },
+        "next": [
+            "AttackSlot1",
+            "AttackSlot2",
+            "AttackSlot3",
+            "AttackSlot4"
+        ],
+        "max_hit": 3  // 默认进行3次挑战
+    },
+    "AttackSlot1": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [19,764,159,92],
+                "expected": [
+                    "守卫"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [79,893,38,35]
+            }
+        },
+        "next": [
+            "Attack",
+            "StopAttack"
+        ],
+        "post_delay": 2000
+    },
+    "AttackSlot2": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [194,763,158,89],
+                "expected": [
+                    "守卫"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [254,888,41,40]
+            }
+        },
+        "next": [
+            "Attack",
+            "StopAttack"
+        ],
+        "post_delay": 2000
+    },
+    "AttackSlot3": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [368,763,159,93],
+                "expected": [
+                    "守卫"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [430,892,36,36]
+            }
+        },
+        "next": [
+            "Attack",
+            "StopAttack"
+        ],
+        "post_delay": 2000
+    },
+    "AttackSlot4": {
+        // 第四位不用识别可以直接打
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [601,892,42,38]
+            }
+        },
+        "next": [
+            "Attack",
+            "StopAttack",
+            "RetryAttackSlot4"
+        ],
+        "post_delay": 2000
+    },
+    "RetryAttackSlot4": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [14,514,180,70],
+                "expected": ["选择对手", "选择対手"]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": { "target": [590,865,70,70] }
+        },
+        "next": ["Attack", "StopAttack", "RetryAttackSlot4"],
+        "post_delay": 1500,
+        "max_hit": 3
+    },
+    "Attack": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [287,246,152,53],
+                "expected": [
+                    "排位挑战"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [287,881,153,37]
+            }
+        },
+        "next": [
+            "ArenaRankingChanged",
+            "Win"  // 选择的进攻对象都是必赢的
+        ],
+        "timeout": 30000
+    },
+    "ArenaRankingChanged": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [73, 401, 574, 632],
+                "expected": [
+                    "由于对手排名信息发生变化",
+                    "重新进行挑战"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [236, 707, 248, 75]
+            }
+        },
+        "next": ["SelectAttackSlot"],
+        "post_delay": 2000,
+        "max_hit": 3,
+        "focus": {
+            "Node.Action.Starting": {
+                "content": "竞技场对手排名已变化，确认刷新后重新选择对手",
+                "display": ["log"]
+            }
+        }
+    },
+    "Win": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [186,191,343,101],
+                "expected": [
+                    "挑战胜利"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "post_delay": 1000,
+        "next": ["MarkArenaCompleted"]
+    },
+    "StopAttack": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [205,317,302,71],
+                "expected": [
+                    "购买竞技场券"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [163,813,147,41]  // 点击取消
+            }
+        },
+        "next": ["MarkArenaCompleted"]
+    },
+    "MarkArenaCompleted": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "verification_checkpoint",
+                "custom_action_param": { "task": "竞技场", "operation": "mark", "checkpoint": "挑战完成或次数已用完" }
+            }
+        },
+        "next": ["VerifyArenaCompleted"]
+    },
+    "VerifyArenaCompleted": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "verification_checkpoint",
+                "custom_action_param": {
+                    "task": "竞技场",
+                    "operation": "verify",
+                    "required": ["挑战完成或次数已用完"]
+                }
+            }
+        }
+    }
+}

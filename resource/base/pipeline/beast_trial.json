@@ -1,0 +1,489 @@
+{
+    "BeastTrial": {
+        "action": {"type":"Custom","param":{"custom_action":"daily_activity_runner","custom_action_param":{"beast":true,"shadow":true}}}
+    },
+    "BeastTrialOnly": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "verification_checkpoint",
+                "custom_action_param": { "task": "圣兽试炼", "operation": "reset" }
+            }
+        },
+        "next": [
+            "[JumpBack]CancelFortuneFruitSpend",
+            "[JumpBack]ReceivePrize",
+            "[JumpBack]ClosePlayerProfile",
+            "[JumpBack]LeaveCurrentPage",
+            "[JumpBack]CloseGift",
+            "[JumpBack]CloseByClickBlank",
+            "[JumpBack]CardPage",
+            "[JumpBack]NotePage",
+            "BeastTrialOpenDailyActivity"
+        ]
+    },
+    "BeastTrialOpenDailyActivity": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [350,330,360,500],
+                "expected": ["每日活动"]
+            }
+        },
+        "action": { "type": "Click" },
+        "next": ["BeastTrialOpenBanner"],
+        "post_delay": 1200
+    },
+    "BeastTrialOpenBanner": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [0,40,720,500],
+                "expected": ["圣兽试炼"]
+            }
+        },
+        "action": { "type": "Click" },
+        "next": ["BeastTrialPendingReward", "BeastTrialMatch"],
+        "post_delay": 1200
+    },
+    "BeastTrialPendingReward": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [40,820,650,230],
+                "template": "lint/red_lint.png"
+            }
+        },
+        "action": { "type": "Click" },
+        "next": ["BeastTrialPendingRewardAfterClick"],
+        "post_delay": 800,
+        "max_hit": 1
+    },
+    "BeastTrialPendingRewardAfterClick": {
+        "next": ["[JumpBack]ReceivePrize", "BeastTrialLeaveDetail"]
+    },
+    "BeastTrialMatch": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [330,900,390,260],
+                "expected": ["^匹配$"]
+            }
+        },
+        "action": { "type": "Click" },
+        "next": ["BeastTrialAccept", "BeastTrialWaitMatch"],
+        "post_delay": 800,
+        "max_hit": 3
+    },
+    "BeastTrialWaitMatch": {
+        "recognition": "DirectHit",
+        "action": { "type": "DoNothing" },
+        "next": ["BeastTrialBattleStarted", "BeastTrialAlreadyReady", "BeastTrialReady", "BeastTrialAccept", "BeastTrialWaitMatch"],
+        "post_delay": 1000,
+        "max_hit": 300
+    },
+    "BeastTrialAccept": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [330,850,390,330],
+                "expected": ["^接受$"]
+            }
+        },
+        "action": { "type": "Click" },
+        "next": ["BeastTrialReady", "BeastTrialWaitReady"],
+        "post_delay": 1200
+    },
+    "BeastTrialWaitReady": {
+        "recognition": "DirectHit",
+        "action": { "type": "DoNothing" },
+        "next": ["BeastTrialBattleStarted", "BeastTrialAlreadyReady", "BeastTrialReady", "BeastTrialAccept", "BeastTrialMatch", "BeastTrialWaitReady"],
+        "post_delay": 1000,
+        "max_hit": 60
+    },
+    "BeastTrialBattleStarted": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [220,0,300,130],
+                "expected": ["回合.*([1-9]|10)/10"]
+            }
+        },
+        "next": ["BeastTrialWaitBattle"]
+    },
+    "BeastTrialReady": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [300,880,180,140],
+                "expected": ["^准备$", "^准备战斗$"]
+            }
+        },
+        "action": { "type": "Click" },
+        "next": ["BeastTrialWaitForBattleStart"],
+        "post_delay": 1000
+    },
+    "BeastTrialAlreadyReady": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [300,880,180,140],
+                "expected": ["取消准备", "消准备"]
+            }
+        },
+        "action": { "type": "DoNothing" },
+        "next": ["BeastTrialWaitForBattleStart"]
+    },
+    "BeastTrialWaitForBattleStart": {
+        "recognition": "DirectHit",
+        "action": { "type": "DoNothing" },
+        "next": ["BeastTrialBattleStarted", "BeastTrialBattleSummary", "BeastTrialRewardPage", "BeastTrialWaitForBattleStart"],
+        "post_delay": 1000,
+        "max_hit": 180,
+        "focus": {
+            "Node.Action.Starting": {
+                "content": "圣兽试炼已准备，等待实际进入战斗（期间不会再次点击准备按钮）",
+                "display": ["log"]
+            }
+        }
+    },
+    "BeastTrialWaitBattle": {
+        "recognition": "DirectHit",
+        "action": { "type": "DoNothing" },
+        "next": ["BeastTrialBattleSummary", "BeastTrialRewardPage", "BeastTrialHomeAfterBattle", "BeastTrialWaitExtra"],
+        "post_delay": 180000,
+        "focus": {
+            "Node.Action.Starting": {
+                "content": "圣兽试炼已开始，固定等待 3 分钟",
+                "display": ["log", "toast"]
+            }
+        }
+    },
+    "BeastTrialWaitExtra": {
+        "recognition": "DirectHit",
+        "action": { "type": "DoNothing" },
+        "next": ["BeastTrialClosePlayerProfile", "BeastTrialBattleSummary", "BeastTrialRewardPage", "BeastTrialHomeAfterBattle", "BeastTrialWaitExtra"],
+        "post_delay": 5000,
+        "max_hit": 12
+    },
+    "BeastTrialBattleSummary": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [0,0,720,1280],
+                "expected": ["战斗结束", "点击空白处关闭"]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": { "target": [250,1150,220,100] }
+        },
+        "next": ["BeastTrialClosePlayerProfile", "BeastTrialRewardPage", "BeastTrialHomeAfterBattle", "BeastTrialAfterSummaryWait"],
+        "post_delay": 1500
+    },
+    "BeastTrialAfterSummaryWait": {
+        "recognition": "DirectHit",
+        "action": { "type": "DoNothing" },
+        "next": ["BeastTrialClosePlayerProfile", "BeastTrialRewardPage", "BeastTrialHomeAfterBattle", "BeastTrialBattleSummary", "BeastTrialAfterSummaryWait"],
+        "post_delay": 1000,
+        "max_hit": 20,
+        "focus": {
+            "Node.PipelineNode.Failed": {
+                "content": "圣兽试炼结算页未能关闭或未进入奖励页，任务已判定失败",
+                "display": ["log", "toast"]
+            }
+        }
+    },
+    "BeastTrialClosePlayerProfile": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [260,250,450,180],
+                "expected": ["玩家编号"]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": { "target": [690,80,20,20] }
+        },
+        "next": ["BeastTrialBattleSummary", "BeastTrialRewardPage", "BeastTrialHomeAfterBattle", "BeastTrialWaitExtra"],
+        "post_delay": 800
+    },
+    "BeastTrialHomeAfterBattle": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [0,80,720,420],
+                "expected": ["日常副本"]
+            }
+        },
+        "action": { "type": "DoNothing" },
+        "next": ["BeastTrialOpenDailyActivityForReward"]
+    },
+    "BeastTrialOpenDailyActivityForReward": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [350,330,360,500],
+                "expected": ["每日活动"]
+            }
+        },
+        "action": { "type": "Click" },
+        "next": ["BeastTrialOpenBannerForReward"],
+        "post_delay": 1200
+    },
+    "BeastTrialOpenBannerForReward": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [0,40,720,500],
+                "expected": ["圣兽试炼"]
+            }
+        },
+        "action": { "type": "Click" },
+        "next": ["BeastTrialRewardPage", "BeastTrialWaitRewardPage"],
+        "post_delay": 1200
+    },
+    "BeastTrialWaitRewardPage": {
+        "recognition": "DirectHit",
+        "action": { "type": "DoNothing" },
+        "next": ["BeastTrialRewardPage", "[JumpBack]ReceivePrize", "BeastTrialBattleSummary", "BeastTrialWaitRewardPage"],
+        "post_delay": 1000,
+        "max_hit": 30,
+        "focus": {
+            "Node.PipelineNode.Failed": {
+                "content": "圣兽试炼战后未能重新进入奖励页，已停止，避免误开下一场战斗",
+                "display": ["log", "toast"]
+            }
+        }
+    },
+    "BeastTrialRewardPage": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [0,0,720,1000],
+                "expected": ["今日试炼最高伤害"]
+            }
+        },
+        "next": [
+            "[JumpBack]ReceivePrize",
+            "[JumpBack]BeastTrialClaimReward",
+            "BeastTrialLeaveDetail"
+        ]
+    },
+    "BeastTrialClaimReward": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [40,820,650,230],
+                "template": "lint/red_lint.png"
+            }
+        },
+        "action": { "type": "Click" },
+        "post_delay": 800,
+        "max_hit": 1
+    },
+    "BeastTrialLeaveDetail": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [0,0,720,1000],
+                "expected": ["今日试炼最高伤害", "八岐大蛇"]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": { "target": [45,1205,50,45] }
+        },
+        "next": ["BeastTrialLeaveDaily", "BeastTrialLeaveDetail"],
+        "post_delay": 1200,
+        "max_hit": 3
+    },
+    "BeastTrialLeaveDaily": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [0,0,720,500],
+                "expected": ["每日活动"]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": { "target": [45,1205,50,45] }
+        },
+        "next": ["BeastTrialReturnedHome", "BeastTrialLeaveDaily"],
+        "post_delay": 1200,
+        "max_hit": 3
+    },
+    "BeastTrialReturnedHome": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [0,80,720,420],
+                "expected": ["日常副本"]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": { "target": [320,1150,110,120] }
+        },
+        "next": ["BeastTrialOpenTaskMenu"],
+        "post_delay": 1000
+    },
+    "BeastTrialOpenTaskMenu": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [619,971,92,72],
+                "template": "button/daily_entry.png"
+            }
+        },
+        "action": { "type": "Click" },
+        "next": ["BeastTrialEnterTaskPage"],
+        "post_delay": 1000
+    },
+    "BeastTrialEnterTaskPage": {
+        "recognition": {
+            "type": "OCR",
+            "param": { "expected": ["^任务$"] }
+        },
+        "action": { "type": "Click" },
+        "next": ["BeastTrialDailyTab"],
+        "post_delay": 1500
+    },
+    "BeastTrialDailyTab": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [148,1175,566,90],
+                "expected": ["^日常$"]
+            }
+        },
+        "action": { "type": "Click" },
+        "next": ["BeastTrialVerifyDailyTask"],
+        "post_delay": 1000
+    },
+    "BeastTrialVerifyDailyTask": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "beast_trial_daily_guard"
+            }
+        },
+        "next": ["VerifyBeastTrialCompleted"],
+        "focus": {
+            "Node.Action.Failed": {
+                "content": "圣兽试炼复核失败：日常任务未显示为可领取或已完成",
+                "display": ["log", "toast"]
+            }
+        }
+    },
+    "BeastTrialDailyTaskCompletedTop": {
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    {
+                        "recognition": {
+                            "type": "OCR",
+                            "param": {
+                                "roi": [20,80,460,260],
+                                "expected": ["圣兽试炼领取1次"]
+                            }
+                        }
+                    },
+                    {
+                        "recognition": {
+                            "type": "OCR",
+                            "param": {
+                                "roi": [480,80,220,260],
+                                "expected": ["^领取$", "已完成"]
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "verification_checkpoint",
+                "custom_action_param": { "task": "圣兽试炼", "operation": "mark", "checkpoint": "日常任务已触发" }
+            }
+        },
+        "next": ["VerifyBeastTrialCompleted"]
+    },
+    "BeastTrialScrollDailyTasks": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [0,0,720,180],
+                "expected": ["日常任务"]
+            }
+        },
+        "action": {
+            "type": "Swipe",
+            "param": {
+                "begin": [360,1000,1,1],
+                "end": [360,400,1,1],
+                "duration": 500
+            }
+        },
+        "next": ["BeastTrialDailyTaskCompleted"],
+        "post_delay": 1000
+    },
+    "BeastTrialDailyTaskCompleted": {
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    {
+                        "recognition": {
+                            "type": "OCR",
+                            "param": {
+                                "roi": [20,980,460,200],
+                                "expected": ["圣兽试炼领取1次"]
+                            }
+                        }
+                    },
+                    {
+                        "recognition": {
+                            "type": "OCR",
+                            "param": {
+                                "roi": [480,980,220,200],
+                                "expected": ["^领取$", "已完成"]
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "verification_checkpoint",
+                "custom_action_param": { "task": "圣兽试炼", "operation": "mark", "checkpoint": "日常任务已触发" }
+            }
+        },
+        "next": ["VerifyBeastTrialCompleted"]
+    },
+    "VerifyBeastTrialCompleted": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "verification_checkpoint",
+                "custom_action_param": {
+                    "task": "圣兽试炼",
+                    "operation": "verify",
+                    "required": ["日常任务已触发"]
+                }
+            }
+        },
+        "focus": {
+            "Node.Action.Failed": {
+                "content": "圣兽试炼复核失败：日常任务“圣兽试炼领取1次”尚未触发",
+                "display": ["log", "toast"]
+            }
+        }
+    }
+}

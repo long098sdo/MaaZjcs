@@ -1,0 +1,13 @@
+{
+  "EnergyCircuit":{"action":{"type":"Custom","param":{"custom_action":"navigation_guard"}},"next":["CircuitOpenActivity"]},
+  "CircuitOpenActivity":{"recognition":{"type":"OCR","param":{"roi":[598,87,118,134],"expected":["精彩活动"]}},"action":{"type":"Click","param":{"target":[650,128,24,20]}},"post_delay":1000,"next":["CircuitRun"]},
+  "CircuitRun":{"action":{"type":"Custom","param":{"custom_action":"circuit_runner"}},"timeout":600000},
+  "CircuitEventEntry":{"recognition":{"type":"OCR","param":{"roi":[0,100,720,1040],"expected":["菲涅克的谜题"]}}},
+  "CircuitList":{"recognition":{"type":"OCR","param":{"roi":[0,0,450,110],"expected":["菲涅克的谜题"]}}},
+  "CircuitLevelCaption":{"recognition":{"type":"OCR","param":{"roi":[0,120,720,1040],"expected":["能量回路[0-9]+"]}}},
+  "CircuitNextMode":{"recognition":{"type":"OCR","param":{"roi":[0,120,720,1040],"expected":["炮台谜题1"]}}},
+  "CircuitAvailable":{"recognition":{"type":"TemplateMatch","param":{"roi":[0,130,720,1000],"template":"lint/red_lint.png","threshold":0.8}}},
+  "CircuitBoardTitle":{"recognition":{"type":"OCR","param":{"roi":[0,0,440,110],"expected":["能量回路[0-9]+"]}}},
+  "CircuitSuccessTitle":{"recognition":{"type":"OCR","param":{"roi":[130,175,470,135],"expected":["解谜成功"]}}},
+  "CircuitSuccessExit":{"recognition":{"type":"OCR","param":{"roi":[80,1080,260,100],"expected":["^退出$"]}}}
+}

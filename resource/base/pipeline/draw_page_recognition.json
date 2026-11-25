@@ -1,0 +1,534 @@
+{
+  "DrawPlayerNumber": {
+    "recognition": {
+      "type": "OCR",
+      "param": {
+        "roi": [
+          390,
+          300,
+          280,
+          70
+        ],
+        "expected": [
+          "玩家编号"
+        ]
+      }
+    }
+  },
+  "DrawOtherClientLogin": {
+    "recognition": {
+      "type": "OCR",
+      "param": {
+        "roi": [
+          130,
+          470,
+          460,
+          200
+        ],
+        "expected": [
+          "账号在其他客户端登录"
+        ]
+      }
+    }
+  },
+  "DrawAngelBuilding": {
+    "recognition": {
+      "type": "TemplateMatch",
+      "param": {
+        "roi": [
+          0,
+          500,
+          720,
+          500
+        ],
+        "template": [
+          "daily_draw/angel_day.png"
+        ],
+        "threshold": 0.6
+      }
+    }
+  },
+  "DrawTreeTodayCounter": {
+    "recognition": {
+      "type": "OCR",
+      "param": {
+        "roi": [
+          180,
+          930,
+          360,
+          100
+        ],
+        "expected": [
+          "今.*已.*结缘"
+        ]
+      }
+    }
+  },
+  "DrawTreeTokenBalance": {
+    "recognition": {
+      "type": "OCR",
+      "param": {
+        "roi": [
+          486,
+          35,
+          60,
+          35
+        ],
+        "expected": [
+          "^[0-9]+$"
+        ]
+      }
+    }
+  },
+  "DrawTreeSingleButton": {
+    "recognition": {
+      "type": "OCR",
+      "param": {
+        "roi": [
+          30,
+          1040,
+          220,
+          100
+        ],
+        "expected": [
+          "^结缘1次$"
+        ]
+      }
+    }
+  },
+  "DrawWishTodayCounter": {
+    "recognition": {
+      "type": "OCR",
+      "param": {
+        "roi": [
+          170,
+          780,
+          390,
+          100
+        ],
+        "expected": [
+          "今.*已.*祈愿"
+        ]
+      }
+    }
+  },
+  "DrawWishResultCounter": {
+    "recognition": {
+      "type": "OCR",
+      "param": {
+        "roi": [
+          35,
+          30,
+          270,
+          48
+        ],
+        "expected": [
+          "今.*已.*祈愿"
+        ]
+      }
+    }
+  },
+  "DrawWishAdvancedDescriptor": {
+    "recognition": {
+      "type": "OCR",
+      "param": {
+        "roi": [
+          110,
+          870,
+          500,
+          80
+        ],
+        "expected": [
+          "必出.*职业技能"
+        ]
+      }
+    }
+  },
+  "DrawWishRegularDescriptor": {
+    "recognition": {
+      "type": "OCR",
+      "param": {
+        "roi": [
+          110,
+          870,
+          500,
+          80
+        ],
+        "expected": [
+          "传说技能.*必出"
+        ]
+      }
+    }
+  },
+  "DrawWishFriendDescriptor": {
+    "recognition": {
+      "type": "OCR",
+      "param": {
+        "roi": [
+          110,
+          870,
+          500,
+          80
+        ],
+        "expected": [
+          "本周.*友情币"
+        ]
+      }
+    }
+  },
+  "DrawWishAdvancedBalance": {
+    "recognition": {
+      "type": "OCR",
+      "param": {
+        "roi": [
+          635,
+          32,
+          70,
+          45
+        ],
+        "expected": [
+          "^[0-9]+$"
+        ]
+      }
+    }
+  },
+  "DrawWishRegularBalance": {
+    "recognition": {
+      "type": "OCR",
+      "param": {
+        "roi": [
+          485,
+          32,
+          65,
+          45
+        ],
+        "expected": [
+          "^[0-9]+$"
+        ]
+      }
+    }
+  },
+  "DrawWishFriendBalance": {
+    "recognition": {
+      "type": "OCR",
+      "param": {
+        "roi": [
+          633,
+          32,
+          72,
+          45
+        ],
+        "expected": [
+          "^[0-9]+$"
+        ]
+      }
+    }
+  },
+  "DrawWishSingleCost": {
+    "recognition": {
+      "type": "OCR",
+      "param": {
+        "roi": [
+          245,
+          953,
+          55,
+          52
+        ],
+        "expected": [
+          "^[0-9]+$"
+        ]
+      }
+    }
+  },
+  "DrawWishSingleButton": {
+    "recognition": {
+      "type": "OCR",
+      "param": {
+        "roi": [
+          80,
+          930,
+          220,
+          100
+        ],
+        "expected": [
+          "^祈愿1次$"
+        ]
+      }
+    }
+  },
+  "DrawWishAdvancedTab": {
+    "recognition": {
+      "type": "OCR",
+      "param": {
+        "roi": [
+          0,
+          1020,
+          720,
+          145
+        ],
+        "expected": [
+          "高阶祈愿"
+        ]
+      }
+    }
+  },
+  "DrawWishAdvancedPreview": {
+    "recognition": {
+      "type": "TemplateMatch",
+      "param": {
+        "roi": [
+          0,
+          1040,
+          100,
+          125
+        ],
+        "template": [
+          "daily_draw/wish_advanced_preview.png"
+        ],
+        "threshold": 0.82
+      }
+    }
+  },
+  "DrawWishRegularTab": {
+    "recognition": {
+      "type": "OCR",
+      "param": {
+        "roi": [
+          0,
+          1020,
+          720,
+          145
+        ],
+        "expected": [
+          "常驻祈愿"
+        ]
+      }
+    }
+  },
+  "DrawWishFriendTab": {
+    "recognition": {
+      "type": "OCR",
+      "param": {
+        "roi": [
+          0,
+          1020,
+          720,
+          145
+        ],
+        "expected": [
+          "友情祈愿"
+        ]
+      }
+    }
+  },
+  "DrawGachaTodayCounter": {
+    "recognition": {
+      "type": "OCR",
+      "param": {
+        "roi": [
+          170,
+          730,
+          390,
+          100
+        ],
+        "expected": [
+          "今.*已.*扭蛋"
+        ]
+      }
+    }
+  },
+  "DrawGachaResultCounter": {
+    "recognition": {
+      "type": "OCR",
+      "param": {
+        "roi": [
+          35,
+          25,
+          280,
+          60
+        ],
+        "expected": [
+          "今.*已开启"
+        ]
+      }
+    }
+  },
+  "DrawGachaCompactSingleButton": {
+    "recognition": {
+      "type": "OCR",
+      "param": {"roi": [22, 1078, 98, 50], "expected": ["^扭蛋1次$"]}
+    }
+  },
+  "DrawGachaCompactSingleCost": {
+    "recognition": {
+      "type": "OCR",
+      "param": {"roi": [154, 1083, 52, 39], "expected": ["^10$"]}
+    }
+  },
+  "DrawGachaSingleButton": {
+    "recognition": {
+      "type": "OCR",
+      "param": {
+        "roi": [
+          90,
+          1060,
+          160,
+          80
+        ],
+        "expected": [
+          "^扭蛋1次$"
+        ]
+      }
+    }
+  },
+  "DrawGachaSingleCost": {
+    "recognition": {
+      "type": "OCR",
+      "param": {
+        "roi": [
+          240,
+          1070,
+          65,
+          65
+        ],
+        "expected": [
+          "^10$"
+        ]
+      }
+    }
+  },
+  "DrawGachaBlueRatio": {
+    "recognition": {
+      "type": "OCR",
+      "param": {
+        "roi": [
+          80,
+          940,
+          160,
+          95
+        ],
+        "expected": [
+          "[0-9]+[/／]10"
+        ]
+      }
+    }
+  },
+  "DrawGachaTopBalance": {
+    "recognition": {
+      "type": "OCR",
+      "param": {
+        "roi": [
+          483,
+          30,
+          67,
+          55
+        ],
+        "expected": [
+          "[0-9]+"
+        ]
+      }
+    }
+  },
+  "DrawElementTodayCounter": {
+    "recognition": {
+      "type": "OCR",
+      "param": {
+        "roi": [
+          250,
+          935,
+          220,
+          60
+        ],
+        "expected": [
+          "今.*已.*扭蛋"
+        ]
+      }
+    }
+  },
+  "DrawGachaBuilding": {
+    "recognition": {
+      "type": "TemplateMatch",
+      "param": {
+        "roi": [
+          0,
+          500,
+          720,
+          500
+        ],
+        "template": [
+          "daily_draw/gacha_day.png",
+          "daily_draw/gacha_alternate.png"
+        ],
+        "threshold": 0.58
+      }
+    }
+  },
+  "DrawGachaBlueSelected": {
+    "recognition": {
+      "type": "TemplateMatch",
+      "param": {
+        "roi": [
+          85,
+          840,
+          150,
+          130
+        ],
+        "template": [
+          "daily_draw/gacha_blue_selected.png"
+        ],
+        "threshold": 0.82
+      }
+    }
+  },
+  "DrawGachaPurpleSelected": {
+    "recognition": {
+      "type": "TemplateMatch",
+      "param": {
+        "roi": [
+          227,
+          840,
+          133,
+          130
+        ],
+        "template": [
+          "daily_draw/gacha_purple_selected.png"
+        ],
+        "threshold": 0.82
+      }
+    }
+  },
+  "DrawGachaOrangeSelected": {
+    "recognition": {
+      "type": "TemplateMatch",
+      "param": {
+        "roi": [
+          361,
+          840,
+          133,
+          130
+        ],
+        "template": [
+          "daily_draw/gacha_orange_selected.png"
+        ],
+        "threshold": 0.82
+      }
+    }
+  },
+  "DrawGachaGoldSelected": {
+    "recognition": {
+      "type": "TemplateMatch",
+      "param": {
+        "roi": [
+          493,
+          840,
+          133,
+          130
+        ],
+        "template": [
+          "daily_draw/gacha_gold_selected.png"
+        ],
+        "threshold": 0.82
+      }
+    }
+  }
+}

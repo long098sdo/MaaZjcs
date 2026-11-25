@@ -1,0 +1,18 @@
+{
+  "CandyNight":{"action":{"type":"Custom","param":{"custom_action":"navigation_guard"}},"next":["CandyMainSpooky","CandyOpenActivity"]},
+  "CandyMainSpooky":{"recognition":{"type":"OCR","param":{"roi":[590,200,130,130],"expected":["惊魂派对"]}},"action":{"type":"Click","param":{"target":[650,260,20,20]}},"post_delay":1500,"next":["CandyRun"]},
+  "CandyOpenActivity":{"recognition":{"type":"OCR","param":{"roi":[598,87,118,134],"expected":["精彩活动"]}},"action":{"type":"Click","param":{"target":[650,128,24,20]}},"post_delay":1000,"next":["CandyRun"]},
+  "CandyEvent":{"recognition":{"type":"OCR","param":{"roi":[0,100,720,1040],"expected":["^惊魂派对$"]}}},
+  "CandyEntry":{"recognition":{"type":"OCR","param":{"roi":[440,1000,260,175],"expected":["糖果消消夜"]}}},
+  "CandyStages":{"recognition":{"type":"OCR","param":{"roi":[60,530,380,180],"expected":["闯关模式"]}}},
+  "CandyList":{"recognition":{"type":"OCR","param":{"roi":[0,0,450,110],"expected":["糖果消消夜"]}}},
+  "CandyLevelCaption":{"recognition":{"type":"OCR","param":{"roi":[0,120,720,1040],"expected":["第[0-9]+关","开放","已通关"]}}},
+  "CandyAvailable":{"recognition":{"type":"TemplateMatch","param":{"roi":[0,120,720,1050],"template":"lint/red_lint.png","threshold":0.8}}},
+  "CandySuccessExit":{"recognition":{"type":"OCR","param":{"roi":[90,1080,260,110],"expected":["^退出$"]}}},
+  "CandyReward":{"recognition":{"type":"OCR","param":{"roi":[20,500,350,80],"expected":["获得奖励"]}}},
+  "CandyRun":{"action":{"type":"Custom","param":{"custom_action":"match3_runner"}},"timeout":600000},
+  "CandyBoard":{"recognition":{"type":"OCR","param":{"roi":[200,20,320,200],"expected":["通关目标"]}}},
+  "CandyLevel1Board":{"recognition":{"type":"OCR","param":{"roi":[200,120,320,65],"expected":["^第1关$"]}}},
+  "CandyLevel2Board":{"recognition":{"type":"OCR","param":{"roi":[200,120,320,65],"expected":["^第2关$"]}}},
+  "CandySuccess":{"recognition":{"type":"OCR","param":{"roi":[90,160,560,300],"expected":["挑战成功","通关成功","闯关成功"]}}}
+}

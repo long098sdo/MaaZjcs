@@ -1,0 +1,184 @@
+{
+    "RedeemCode": {
+        "next": ["RedeemBatch"]
+    },
+    "RedeemBatch": {
+        "recognition": {
+            "type": "DirectHit"
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "redeem_codes",
+                "custom_action_param": {
+                    "codes": ""
+                }
+            }
+        }
+    },
+    "RedeemPrepare": {
+        "next": [
+            "[JumpBack]CancelFortuneFruitSpend",
+            "[JumpBack]ReceivePrize",
+            "[JumpBack]RedeemCancelDialog",
+            "[JumpBack]LeaveCurrentPage",
+            "[JumpBack]CloseGift",
+            "[JumpBack]CloseByClickBlank",
+            "[JumpBack]CardPage",
+            "[JumpBack]HomePage",
+            "RedeemOpenMenu"
+        ]
+    },
+    "RedeemCancelDialog": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [65,680,300,180],
+                "expected": ["^取消$"]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target_offset": [8,5,-16,-10]
+            }
+        },
+        "post_delay": 600
+    },
+    "RedeemOpenMenu": {
+        "recognition": {
+            "type": "DirectHit"
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [650,990,30,36]
+            }
+        },
+        "next": ["RedeemEnterUser"],
+        "post_delay": 800
+    },
+    "RedeemEnterUser": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [80,780,320,480],
+                "expected": ["^用户$"]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target_offset": [8,5,-16,-10]
+            }
+        },
+        "next": ["RedeemEnterDialog"],
+        "post_delay": 700
+    },
+    "RedeemEnterDialog": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [130,750,460,270],
+                "expected": ["^兑换码$"]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target_offset": [8,5,-16,-10]
+            }
+        },
+        "next": ["RedeemFocusInput"],
+        "post_delay": 500
+    },
+    "RedeemFocusInput": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [95,500,530,190],
+                "expected": ["请输入兑换码"]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target_offset": [10,6,-20,-12]
+            }
+        },
+        "post_delay": 300
+    },
+    "RedeemSubmit": {
+        "next": ["RedeemInputCode"]
+    },
+    "RedeemInputCode": {
+        "recognition": {
+            "type": "DirectHit"
+        },
+        "action": {
+            "type": "InputText",
+            "param": {
+                "input_text": ""
+            }
+        },
+        "next": ["RedeemConfirm"],
+        "post_delay": 250
+    },
+    "RedeemConfirm": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [350,665,300,210],
+                "expected": ["^确定$"]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target_offset": [8,5,-16,-10]
+            }
+        },
+        "next": ["RedeemWaitResult"],
+        "post_delay": 1200
+    },
+    "RedeemWaitResult": {
+        "recognition": {
+            "type": "DirectHit"
+        },
+        "action": {
+            "type": "DoNothing"
+        }
+    },
+    "RedeemCleanup": {
+        "next": [
+            "[JumpBack]ReceivePrize",
+            "[JumpBack]RedeemResultConfirm",
+            "[JumpBack]RedeemCancelDialog",
+            "End"
+        ]
+    },
+    "RedeemResultConfirm": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [90,400,540,420],
+                "expected": [
+                    "已使用",
+                    "已兑换",
+                    "已被使用",
+                    "无效",
+                    "过期",
+                    "不存在",
+                    "错误"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [445,720,90,55]
+            }
+        },
+        "post_delay": 500
+    }
+}

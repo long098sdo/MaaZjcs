@@ -1,0 +1,18 @@
+{
+  "EnterSpookyActivity":{"recognition":{"type":"OCR","param":{"roi":[0,100,720,1040],"expected":["^惊魂派对$"]}},"action":{"type":"Click"},"post_delay":1400,"max_hit":1,"next":["SpookyRewardsRun"]},
+  "SpookyRewardsRun":{"action":{"type":"Custom","param":{"custom_action":"spooky_free_rewards","custom_action_param":{"sign":false,"manual":false}}},"next":["LeaveCurrentPage"]},
+  "SpookyHub":{"recognition":{"type":"OCR","param":{"roi":[140,40,460,180],"expected":["惊魂派对"]}}},
+  "SpookySignEntry":{"recognition":{"type":"OCR","param":{"roi":[500,720,220,140],"expected":["惊奇日签"]}}},
+  "SpookySignPage":{"recognition":{"type":"OCR","param":{"roi":[270,200,380,130],"expected":["惊奇日签"]}}},
+  "SpookySignClaim":{"recognition":{"type":"OCR","param":{"roi":[40,400,640,700],"expected":["^领取$"]}}},
+  "SpookySignClaimed":{"recognition":{"type":"TemplateMatch","param":{"roi":[40,400,640,700],"template":"button/spooky_claimed_tick.png","threshold":0.88}}},
+  "SpookyRewardPopup":{"recognition":{"type":"OCR","param":{"roi":[0,200,720,800],"expected":["获得奖励","获得物品"]}}},
+  "SpookyManualEntry":{"recognition":{"type":"OCR","param":{"roi":[210,920,300,150],"expected":["怪谈手册"]}}},
+  "SpookyManualPage":{"recognition":{"type":"OCR","param":{"roi":[40,160,450,160],"expected":["怪谈手册"]}}},
+  "SpookyManualProgress":{"recognition":{"type":"OCR","param":{"roi":[140,315,380,80],"expected":["[0-9]+[/／][0-9]+","[0-9]+级"]}}},
+  "SpookyManualTasksTab":{"recognition":{"type":"OCR","param":{"roi":[515,1130,185,100],"expected":["^任务$"]}}},
+  "SpookyManualRewardsTab":{"recognition":{"type":"OCR","param":{"roi":[335,1130,180,100],"expected":["^奖励$"]}}},
+  "SpookyManualTaskClaim":{"recognition":{"type":"OCR","param":{"roi":[470,440,190,670],"expected":["^领取$"]}}},
+  "SpookyManualBasicHeading":{"recognition":{"type":"OCR","param":{"roi":[155,395,195,60],"expected":["基础奖励"]}}},
+  "SpookyBasicRed":{"recognition":{"type":"TemplateMatch","param":{"roi":[160,450,175,575],"template":"lint/red_lint.png","threshold":0.82}}}
+}

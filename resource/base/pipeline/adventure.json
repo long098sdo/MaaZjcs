@@ -1,0 +1,155 @@
+{
+    "Adventure": {
+        "next": [
+            "[JumpBack]CancelFortuneFruitSpend",
+            "[JumpBack]LeaveCurrentPage",
+            "[JumpBack]CloseGift",
+            "[JumpBack]CloseByClickBlank",
+            "[JumpBack]CardPage",
+            "AdventureMain"
+        ]
+    },
+    "AdventureMain": {
+        "next": [
+            "[JumpBack]NotePage",
+            "[JumpBack]EnterAdventurePage",
+            "LeaveCurrentPage"
+        ]
+    },
+    "EnterAdventurePage": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [423,133,289,305],
+                "expected": [
+                    "羁绊冒险"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "AdventurePage"
+        ]
+    },
+    "AdventurePage": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [146,1177,560,83],
+                "expected": [
+                    "羁绊冒险"
+                ]
+            }
+        },
+        "next": [
+            "[JumpBack]SelectAdventure",
+            "End"
+        ]
+    },
+    "FinishedAdventurePage": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "委派结束"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [334,930,66,59]
+            }
+        }
+    },
+    "SelectAdventure": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "template": [
+                    "adventure/blue_card.png",
+                    "adventure/blue_gift.png",
+                    "adventure/purple_card.png",
+                    "adventure/purple_gift.png",
+                    "adventure/purple_star.png",
+                    "adventure/purple_star.png",
+                    "adventure/blue_ball.png",
+                    "adventure/pet_ball.png"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "FinishedAdventurePage",
+            "QuickSelectAdventureMember"
+        ]
+    },
+    "QuickSelectAdventureMember": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [60,1041,600,101],
+                "expected": [
+                    "快速选择"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "StartAdventure"
+        ]
+    },
+    "StartAdventure": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [60,1041,600,101],
+                "expected": [
+                    "开始"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "[JumpBack]ConfirmMember",
+            "AdventureDepart"
+        ]
+    },
+    "ConfirmMember": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "确定"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        }
+    },
+    "AdventureDepart": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "委派开始"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [322,858,68,58]
+            }
+        }
+    }
+}

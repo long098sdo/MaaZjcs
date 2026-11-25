@@ -1,0 +1,7 @@
+{
+    "MaterialQuickLabel": {
+        "recognition": { "type": "OCR", "param": {
+            "roi": [258,1034,109,45], "expected": ["快捷"]
+        } }
+    }
+}

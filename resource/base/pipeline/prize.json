@@ -1,0 +1,1221 @@
+{
+    "Prize": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "verification_checkpoint",
+                "custom_action_param": { "task": "领取奖励", "operation": "reset" }
+            }
+        },
+        "next": ["PrizePrepareMain"]
+    },
+    "PrizePrepareMain": {
+        "action": {"type":"Custom","param":{"custom_action":"navigation_guard"}},
+        "next": [
+            "[JumpBack]CancelFortuneFruitSpend",
+            "[JumpBack]LeaveCurrentPage",
+            "[JumpBack]CloseGift",
+            "[JumpBack]CloseByClickBlank",
+            "[JumpBack]CardPage",
+            "[JumpBack]HomePage",
+            "FreePrizeGate"
+        ]
+    },
+    "FreePrizeGate": {
+        "recognition": "DirectHit",
+        "next": ["GetAllPrize"]
+    },
+    "GetAllPrize": {
+        "next": ["[JumpBack]CancelFortuneFruitSpend", "[JumpBack]CloseGift", "PrizeRegionsRun"]
+    },
+    "PrizeRegionsRun": {
+        "action": {"type":"Custom","param":{"custom_action":"prize_regions"}},
+        "next": ["End"]
+    },
+    "PrizeRegionRecover": {
+        "next": ["[JumpBack]CancelFortuneFruitSpend", "[JumpBack]CloseGift", "[JumpBack]ShoppingMallCancelPurchase", "[JumpBack]PrizeFriendPopupDismiss", "NavigationRecovery"]
+    },
+    "PrizeFriendPopupDismiss": {
+        "recognition":{"type":"OCR","param":{"roi":[180,215,360,95],"expected":["^友情币获得$"]}},
+        "action":{"type":"Click","param":{"target":[360,1100,1,1]}},
+        "post_delay":800,
+        "max_hit":2,
+        "next":["End"]
+    },
+    "PrizeFriendCheck": {
+        "recognition": "DirectHit",
+        "action": {"type":"Custom","param":{"custom_action":"friend_rewards"}},
+        "next": ["MarkFriendPrizeChecked"],
+        "max_hit": 1
+    },
+    "MarkFriendPrizeChecked": {
+        "action": {"type":"Custom","param":{"custom_action":"verification_checkpoint","custom_action_param":{"task":"领取奖励","operation":"mark","checkpoint":"好友友情币已检查"}}},
+        "next": ["End"]
+    },
+    "FriendPrizeMenu": {"recognition":{"type":"TemplateMatch","param":{"roi":[619,971,92,72],"template":"button/daily_entry.png"}}},
+    "FriendPrizeMenuEntry": {"recognition":{"type":"OCR","param":{"roi":[0,650,720,300],"expected":["^好友$"]}}},
+    "FriendPrizePage": {"recognition":{"type":"OCR","param":{"roi":[15,70,400,120],"expected":["好友数量"]}}},
+    "FriendPrizeHeart": {"recognition":{"type":"TemplateMatch","param":{"roi":[280,1045,160,115],"template":["button/friend_heart.png","button/friend_heart_empty.png","button/friend_heart_ready.png"],"threshold":0.72}}},
+    "FriendPrizePopup": {"recognition":{"type":"OCR","param":{"roi":[180,215,360,95],"expected":["友情币获得"]}}},
+    "FriendPrizeEmpty": {"recognition":{"type":"OCR","param":{"roi":[145,625,430,100],"expected":["暂时没有可领取的友情币"]}}},
+    "FriendPrizeBattleList": {"recognition":{"type":"OCR","param":{"roi":[220,360,300,530],"expected":["^分享矿石$","^组队战斗$","^匹配战斗$"]}}},
+    "FriendPrizeClaim": {"recognition":{"type":"OCR","param":{"roi":[240,925,240,90],"expected":["^领取$"]}}},
+    "GetTaskPrizeMain": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [619,971,92,72],
+                "template": "button/daily_entry.png"
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "EnterTaskPage",
+            "LeaveCurrentPage"
+        ],
+        "post_delay": 1000,
+        "max_hit": 1
+    },
+    "EnterTaskPage": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "任务"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "[JumpBack]DailyTaskPage",
+            "[JumpBack]WeeklyTaskPage",
+            "[JumpBack]CommissionPage",
+            "MarkPrizeTaskChecked"
+        ],
+        "post_delay": 2000
+    },
+    "DailyTaskPage": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [148,1175,566,90],
+                "expected": [
+                    "日常"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "[JumpBack]GetTaskPrize",
+            "DailyTaskSelectionAudit",
+            "End"
+        ],
+        "max_hit": 1,
+        "post_delay": 1000
+    },
+    "WeeklyTaskPage": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [148,1175,566,90],
+                "expected": [
+                    "周常"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "[JumpBack]GetTaskPrize",
+            "End"
+        ],
+        "post_delay": 1000,
+        "max_hit": 1
+    },
+    "CommissionPage": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [148,1175,566,90],
+                "expected": [
+                    "委托"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "CommissionRun"
+        ],
+        "post_delay": 1000,
+        "max_hit": 1
+    },
+    "GetTaskPrize": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [460,127,232,1023],
+                "expected": [
+                    "^领取$"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "post_delay": 1000
+    },
+    "DailyTaskAllText": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [10,110,700,1050],
+                "expected": [".*"]
+            }
+        }
+    },
+    "DailyTaskSelectionAudit": {
+        "recognition": "DirectHit",
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "daily_task_selection_audit"
+            }
+        },
+        "next": ["MarkDailyTasksComplete"]
+    },
+    "DailyTaskHasIncompleteItems": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [450,120,260,1030],
+                "expected": ["^前往.*"]
+            }
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "verification_checkpoint",
+                "custom_action_param": { "task": "领取奖励", "operation": "mark", "checkpoint": "发现未完成日常任务" }
+            }
+        },
+        "focus": {
+            "Node.Action.Succeeded": {
+                "content": "日常任务页仍有“前往”项目：对应任务未完成，本次领取奖励不能标记为全部完成",
+                "display": ["log", "toast"]
+            }
+        }
+    },
+    "MarkDailyTasksComplete": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "verification_checkpoint",
+                "custom_action_param": { "task": "领取奖励", "operation": "mark", "checkpoint": "日常任务无未完成项" }
+            }
+        },
+        "next": ["End"]
+    },
+    "GetCommissionPrize": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [17,168,692,998],
+                "expected": [
+                    "提交"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "post_delay": 1000
+    },
+    "Improvefavorability": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "好感度"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "post_delay": 1000
+    },
+    "GetShoppingMallPrizeMain": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [619,971,92,72],
+                "template": "button/daily_entry.png"
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "EnterShoppingMallPage",
+            "LeaveCurrentPage"
+        ],
+        "post_delay": 1000,
+        "max_hit": 1
+    },
+    "EnterShoppingMallPage": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "商城"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "[JumpBack]XunliPage",
+            "[JumpBack]DailyDiscountPage",
+            "[JumpBack]WeeklyDiscountPage",
+            "[JumpBack]ShoppingMallRedEntry",
+            "[JumpBack]SwipeDownShoppingMallPage",
+            "[JumpBack]XunliPage",
+            "[JumpBack]DailyDiscountPage",
+            "[JumpBack]WeeklyDiscountPage",
+            "[JumpBack]ShoppingMallRedEntryAfterScroll",
+            "MarkPrizeMallChecked"
+        ],
+        "post_delay": 2000
+    },
+    "XunliPage": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "巡礼之证"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "[JumpBack]XunliDestination",
+            "[JumpBack]XunliCertification",
+            "LeaveCurrentPage"
+        ],
+        "post_delay": 2000,
+        "max_hit": 1
+    },
+    "SwipeDownShoppingMallPage": {
+        "next": [
+            "SwipeDown"
+        ],
+        "max_hit": 2
+    },
+    "ShoppingMallRedMarkerRaw": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [610,80,105,1030],
+                "template": "lint/red_lint.png"
+            }
+        }
+    },
+    "ShoppingMallRedEntry": {
+        "recognition": { "type": "Custom", "param": { "custom_recognition": "mall_red_once" } },
+        "action": { "type": "Click" },
+        "next": ["ShoppingMallCollectRedRewards"],
+        "post_delay": 1200,
+        "max_hit": 20
+    },
+    "ShoppingMallRedEntryAfterScroll": {
+        "recognition": { "type": "Custom", "param": { "custom_recognition": "mall_red_once" } },
+        "action": { "type": "Click" },
+        "next": ["ShoppingMallCollectRedRewards"],
+        "post_delay": 1200,
+        "max_hit": 20
+    },
+    "ShoppingMallCollectRedRewards": {
+        "next": [
+            "[JumpBack]ReceivePrize",
+            "[JumpBack]ShoppingMallExplicitFreeClaim",
+            "[JumpBack]ShoppingMallCancelPurchase",
+            "LeaveCurrentPage"
+        ]
+    },
+    "ShoppingMallExplicitFreeClaim": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [40,120,640,950],
+                "expected": ["^领取$"]
+            }
+        },
+        "action": { "type": "Click" },
+        "next": ["ReceivePrize", "End"],
+        "post_delay": 800,
+        "max_hit": 30
+    },
+    "ShoppingMallCancelPurchase": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [80,650,560,420],
+                "expected": ["^取消$"]
+            }
+        },
+        "action": { "type": "Click" },
+        "next": ["End"],
+        "post_delay": 500,
+        "max_hit": 3
+    },
+    "XunliDestination": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "巡礼目标"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "[JumpBack]XunliDailyDestination",
+            "[JumpBack]XunliWeeklyDestination",
+            "[JumpBack]XunliTermDestination",
+            "End"
+        ],
+        "post_delay": 2000,
+        "max_hit": 1
+    },
+    "XunliDailyDestination": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "每日目标"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "[JumpBack]GetXunliDestinationPrize",
+            "End"
+        ],
+        "post_delay": 2000,
+        "max_hit": 1
+    },
+    "XunliWeeklyDestination": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "每周目标"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "[JumpBack]GetXunliDestinationPrize",
+            "End"
+        ],
+        "post_delay": 2000,
+        "max_hit": 1
+    },
+    "XunliTermDestination": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "本期目标"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "[JumpBack]GetXunliDestinationPrize",
+            "End"
+        ],
+        "post_delay": 2000,
+        "max_hit": 1
+    },
+    "GetXunliDestinationPrize": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [462,339,227,710],
+                "expected": [
+                    "^领取$"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "post_delay": 2000
+    },
+    "XunliCertification": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [146,1168,566,102],
+                "expected": [
+                    "巡礼之证"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "[JumpBack]GetXunliCertificationPrize",
+            "End"
+        ],
+        "post_delay": 2000,
+        "max_hit": 1
+    },
+    "GetXunliCertificationPrize": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [180,180,170,900],
+                "template": "lint/red_lint.png"
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "ReceivePrize"
+        ],
+        "post_delay": 2000,
+        "max_hit": 30
+    },
+    "DailyDiscountPage": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "每日特惠"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "[JumpBack]GetDailyDiscountPrize",
+            "LeaveCurrentPage"
+        ],
+        "post_delay": 2000,
+        "max_hit": 1
+    },
+    "GetDailyDiscountPrize": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [54,308,135,128],
+                "template": "lint/red_lint.png"
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "[JumpBack]ReceivePrize",
+            "End"
+        ],
+        "post_delay": 2000,
+        "max_hit": 1
+    },
+    "WeeklyDiscountPage": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "本周精选"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "[JumpBack]GetWeeklyDiscountPrize",
+            "LeaveCurrentPage"
+        ],
+        "post_delay": 2000,
+        "max_hit": 1
+    },
+    "GetWeeklyDiscountPrize": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [20,181,130,131],
+                "template": "lint/red_lint.png"
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "[JumpBack]ReceivePrize",
+            "End"
+        ],
+        "post_delay": 2000,
+        "max_hit": 1
+    },
+    "GetPresentMain": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [619,971,92,72],
+                "template": "button/daily_entry.png"
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "EnterPresentPage",
+            "PrizePresentUnavailable"
+        ],
+        "post_delay": 2000,
+        "max_hit": 1
+    },
+    "PrizePresentUnavailable": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [230,790,130,130],
+                "expected": ["^任务$"]
+            }
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "verification_checkpoint",
+                "custom_action_param": { "task": "领取奖励", "operation": "mark", "checkpoint": "馈赠区域已扫描" }
+            }
+        },
+        "next": ["End"]
+    },
+    "EnterPresentPage": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "馈赠"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "[JumpBack]GetPresentPrize",
+            "MarkPrizePresentChecked"
+        ],
+        "post_delay": 2000,
+        "max_hit": 1
+    },
+    "GetPresentPrize": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [479,116,233,1009],
+                "expected": [
+                    "^领取$"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "[JumpBack]ReceivePrize",
+            "End"
+        ],
+        "post_delay": 2000
+    },
+    "GetActivityPrizeMain": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [598,87,118,134],
+                "expected": [
+                    "精彩活动"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [650,128,24,20]
+            }
+        },
+        "next": [
+            "[JumpBack]EnterSpookyActivity",
+            "[JumpBack]EnterSeasonActivity",  // 赛季活动：登录奖励及赛季巡礼目标
+            "[JumpBack]EnterHolidayActivity",  // 神仙假期：日签及手册每日登录奖励
+            "[JumpBack]EnterSecretPage",  // 秘宝大作战
+            "[JumpBack]EnterDailySignPage",  // 每日签到
+            "[JumpBack]SwipeActivityDown",
+            "MarkPrizeActivityChecked"
+        ],
+        "post_delay": 2500,
+        "max_hit": 1
+    },
+    "EnterHolidayActivity": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [0,180,720,970],
+                "expected": ["联动活动已开启"]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": { "target_offset": [12,8,-24,-16] }
+        },
+        "next": [
+            "[JumpBack]HolidaySignEntry",
+            "[JumpBack]HolidayManualEntry",
+            "LeaveCurrentPage"
+        ],
+        "post_delay": 1500,
+        "max_hit": 1
+    },
+    "HolidaySignEntry": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [60,500,600,360],
+                "expected": ["^假期日签$"]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": { "target_offset": [8,6,-16,-12] }
+        },
+        "next": [
+            "[JumpBack]HolidayFreeClaim",
+            "LeaveCurrentPage"
+        ],
+        "post_delay": 1000,
+        "max_hit": 1
+    },
+    "HolidayFreeClaim": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [0,140,720,1040],
+                "expected": ["^领取$"]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": { "target_offset": [5,3,-10,-6] }
+        },
+        "next": ["ReceivePrize", "End"],
+        "post_delay": 800,
+        "max_hit": 10
+    },
+    "HolidayManualEntry": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [60,500,600,420],
+                "expected": ["^非人度假手册$"]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": { "target_offset": [8,6,-16,-12] }
+        },
+        "next": ["HolidayManualTaskTab"],
+        "post_delay": 1000,
+        "max_hit": 1
+    },
+    "HolidayManualTaskTab": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [430,1080,285,180],
+                "expected": ["^任务$"]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": { "target_offset": [5,3,-10,-6] }
+        },
+        "next": [
+            "[JumpBack]HolidayFreeClaim",
+            "HolidayManualCloseTasks"
+        ],
+        "post_delay": 800
+    },
+    "HolidayManualCloseTasks": {
+        "action": {
+            "type": "Click",
+            "param": { "target": [12, 95, 16, 16] }
+        },
+        "next": ["HolidayManualClosed", "HolidayManualRetryClose"],
+        "post_delay": 800
+    },
+    "HolidayManualClosed": {
+        "recognition": {
+            "type": "OCR",
+            "param": { "roi": [60, 500, 600, 360], "expected": ["假期日签", "今日运势"] }
+        },
+        "next": ["End"]
+    },
+    "HolidayManualRetryClose": {
+        "recognition": {
+            "type": "OCR",
+            "param": { "roi": [20, 100, 680, 350], "expected": ["度假手册", "购买等级"] }
+        },
+        "action": { "type": "Click", "param": { "target": [12, 95, 16, 16] } },
+        "next": ["HolidayManualClosed"],
+        "post_delay": 1000,
+        "max_hit": 2
+    },
+    "EnterSeasonActivity": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [0,80,720,360],
+                "expected": ["^赛季活动$"]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": { "target_offset": [12,8,-24,-16] }
+        },
+        "next": [
+            "[JumpBack]SeasonActivityRedEntry",
+            "LeaveCurrentPage"
+        ],
+        "post_delay": 1800,
+        "max_hit": 1
+    },
+    "SeasonActivityRedEntry": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [0,760,720,180],
+                "template": "lint/season_red_lint.png",
+                "threshold": 0.75
+            }
+        },
+        "action": { "type": "Click" },
+        "next": ["SeasonActivityCollect"],
+        "post_delay": 1500,
+        "max_hit": 10
+    },
+    "SeasonActivityCollect": {
+        "next": [
+            "[JumpBack]SeasonLoginClaim",
+            "[JumpBack]SeasonPassGoals",
+            "[JumpBack]SeasonPassCertificate",
+            "LeaveCurrentPage"
+        ]
+    },
+    "SeasonLoginClaim": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [0,250,720,900],
+                "expected": ["^领取$"]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": { "target_offset": [5,3,-10,-6] }
+        },
+        "next": ["ReceivePrize", "CloseByClickBlank", "End"],
+        "post_delay": 800,
+        "max_hit": 30
+    },
+    "SeasonPassGoals": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [350,1080,370,180],
+                "expected": ["巡礼目标"]
+            }
+        },
+        "action": { "type": "Click" },
+        "next": [
+            "[JumpBack]SeasonPassDailyGoals",
+            "[JumpBack]SeasonPassWeeklyGoals",
+            "[JumpBack]SeasonPassTermGoals",
+            "End"
+        ],
+        "post_delay": 1000,
+        "max_hit": 3
+    },
+    "SeasonPassDailyGoals": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [0,1040,720,150],
+                "expected": ["每日目标"]
+            }
+        },
+        "action": { "type": "Click" },
+        "next": ["[JumpBack]SeasonPassClaim", "End"],
+        "post_delay": 700,
+        "max_hit": 1
+    },
+    "SeasonPassWeeklyGoals": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [0,1040,720,150],
+                "expected": ["每周目标"]
+            }
+        },
+        "action": { "type": "Click" },
+        "next": ["[JumpBack]SeasonPassClaim", "End"],
+        "post_delay": 700,
+        "max_hit": 1
+    },
+    "SeasonPassTermGoals": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [0,1040,720,150],
+                "expected": ["本期目标"]
+            }
+        },
+        "action": { "type": "Click" },
+        "next": ["[JumpBack]SeasonPassClaim", "End"],
+        "post_delay": 700,
+        "max_hit": 1
+    },
+    "SeasonPassClaim": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [450,100,260,950],
+                "expected": ["^领取$"]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": { "target_offset": [5,3,-10,-6] }
+        },
+        "next": ["ReceivePrize", "CloseByClickBlank", "End"],
+        "post_delay": 700,
+        "max_hit": 50
+    },
+    "SeasonPassCertificate": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [0,1080,450,190],
+                "expected": ["巡礼之证"]
+            }
+        },
+        "action": { "type": "Click" },
+        "next": ["[JumpBack]SeasonPassFreeReward", "End"],
+        "post_delay": 800,
+        "max_hit": 3
+    },
+    "SeasonPassFreeReward": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [180,330,180,680],
+                "template": "lint/season_pass_red_lint.png",
+                "threshold": 0.75
+            }
+        },
+        "action": { "type": "Click" },
+        "next": ["ReceivePrize", "CloseByClickBlank", "End"],
+        "post_delay": 700,
+        "max_hit": 50
+    },
+    "SwipeActivityDown": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [15,1174,120,96],
+                "template": [
+                    "button/leave_button1.png",
+                    "button/leave_button2.png",
+                    "button/leave_button3.png",
+                    "button/leave_button4.png",
+                    "button/leave_button5.png"
+                ],
+                "threshold": 0.7
+            }
+        },
+        "action": {
+            "type": "Swipe",
+            "param": {
+                "begin": [350,500],
+                "end": [350,250],
+                "end_hold": 2000
+            }
+        },
+        "max_hit": 5
+    },
+    "EnterSecretPage": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [0,180,720,970],
+                "expected": [
+                    "秘宝大作战"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target_offset": [12,8,-24,-16]
+            }
+        },
+        "next": [
+            "[JumpBack]SecretActivityPresent",
+            "[JumpBack]SecretEnergyPage",
+            "LeaveCurrentPage"
+        ],
+        "post_delay": 1000,
+        "max_hit": 1
+    },
+    "SecretActivityPresent": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [146,1175,568,85],
+                "expected": [
+                    "活动礼包"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [603,1212,28,18]
+            }
+        },
+        "next": [
+            "GetSecretPageActivityPresentPrize",
+            "End"
+        ],
+        "post_delay": 1000,
+        "max_hit": 1
+    },
+    "GetSecretPageActivityPresentPrize": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [0,245,235,190],
+                "expected": ["^领取$"]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target_offset": [6,4,-12,-8]
+            }
+        },
+        "next": [
+            "ReceivePrize",
+            "End"
+        ]
+    },
+    "SecretEnergyPage": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [146,1175,568,85],
+                "expected": [
+                    "获取能量"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [233,1212,28,18]
+            }
+        },
+        "next": [
+            "[JumpBack]GetSecretEnergy",
+            "[JumpBack]SwipeSecretEnergy",
+            "End"
+
+        ],
+        "post_delay": 1000,
+        "max_hit": 1
+    },
+    "GetSecretEnergy": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [528,629,171,515],
+                "expected": [
+                    "^领取$"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target_offset": [8,5,-16,-10]
+            }
+        },
+        "next": ["ReceivePrize", "End"],
+        "post_delay": 800
+    },
+    "SwipeSecretEnergy": {
+        "next": ["SwipeDown"],
+        "max_hit": 4
+    },
+    "EnterDailySignPage": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [0,180,720,1000],
+                "expected": [
+                    "每日签到"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target_offset": [12,8,-24,-16]
+            }
+        },
+        "next": [
+            "[JumpBack]GetDailySignPrize",
+            "[JumpBack]GetDailySignMakeUpPrize",
+            "LeaveCurrentPage"
+        ],
+        "max_hit": 1,
+        "post_delay": 1000
+    },
+    "GetDailySignPrize": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [20,120,680,1040],
+                "expected": [
+                    "^领取$"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target_offset": [5,3,-10,-6]
+            }
+        },
+        "next": [
+            "ReceivePrize",
+            "End"
+        ],
+        "post_delay": 800
+    },
+    "GetDailySignMakeUpPrize": {
+        "enabled": false,
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [20,120,680,1040],
+                "expected": ["^补签$"]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target_offset": [5,3,-10,-6]
+            }
+        },
+        "post_delay": 800,
+        "max_hit": 1
+    },
+    "MarkPrizeActivityChecked": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "verification_checkpoint",
+                "custom_action_param": { "task": "领取奖励", "operation": "mark", "checkpoint": "活动区域已扫描" }
+            }
+        },
+        "next": ["LeaveCurrentPage"]
+    },
+    "MarkPrizeTaskChecked": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "verification_checkpoint",
+                "custom_action_param": { "task": "领取奖励", "operation": "mark", "checkpoint": "任务区域已扫描" }
+            }
+        },
+        "next": ["LeaveCurrentPage"]
+    },
+    "MarkPrizeMallChecked": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "verification_checkpoint",
+                "custom_action_param": { "task": "领取奖励", "operation": "mark", "checkpoint": "商城区域已扫描" }
+            }
+        },
+        "next": ["LeaveCurrentPage"]
+    },
+    "MarkPrizePresentChecked": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "verification_checkpoint",
+                "custom_action_param": { "task": "领取奖励", "operation": "mark", "checkpoint": "馈赠区域已扫描" }
+            }
+        },
+        "next": ["LeaveCurrentPage"]
+    },
+    "VerifyPrizeCompleted": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "verification_checkpoint",
+                "custom_action_param": {
+                    "task": "领取奖励",
+                    "operation": "verify",
+                    "required": ["好友友情币已检查", "活动区域已扫描", "任务区域已扫描", "日常任务无未完成项", "商城区域已扫描", "馈赠区域已扫描"]
+                }
+            }
+        },
+        "focus": {
+            "Node.Action.Failed": {
+                "content": "领取奖励复核失败：启用区域未完成扫描，或日常任务页仍有需要回头完成的项目",
+                "display": ["log", "toast"]
+            }
+        }
+    }
+}

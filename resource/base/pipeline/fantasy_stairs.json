@@ -1,0 +1,230 @@
+{
+    "FantasyStairs": {
+        "next": [
+            "[JumpBack]CancelFortuneFruitSpend",
+            "[JumpBack]ReceivePrize",
+            "[JumpBack]LeaveCurrentPage",
+            "[JumpBack]CloseGift",
+            "[JumpBack]CloseByClickBlank",
+            "[JumpBack]CardPage",
+            "[JumpBack]NotePage",
+            "FantasyOpenTile"
+        ]
+    },
+    "FantasyOpenTile": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [350, 70, 360, 390],
+                "expected": ["幻想阶梯"]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target_offset": [12, 8, -24, -16]
+            }
+        },
+        "next": [
+            "FantasyModeAlreadyRunning",
+            "FantasyChooseFirstStage"
+        ],
+        "post_delay": 1200
+    },
+    "FantasyModeAlreadyRunning": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [20, 40, 680, 430],
+                "expected": ["自动推关中"]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [18, 1190, 82, 70]
+            }
+        },
+        "next": ["End"],
+        "post_delay": 800
+    },
+    "FantasyChooseFirstStage": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [30, 30, 660, 440],
+                "expected": ["当前.*层"]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [342, 205, 36, 30]
+            }
+        },
+        "next": [
+            "FantasyStageAlreadyRunning",
+            "FantasyChallenge"
+        ],
+        "post_delay": 1200
+    },
+    "FantasyStageAlreadyRunning": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": ["自动推关中"]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [18, 1190, 82, 70]
+            }
+        },
+        "next": ["FantasyBackToWeekly"],
+        "post_delay": 800
+    },
+    "FantasyChallenge": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [470, 70, 235, 960],
+                "expected": ["^挑战$"]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target_offset": [10, 6, -20, -12]
+            }
+        },
+        "next": ["FantasyStartFight"],
+        "post_delay": 1200
+    },
+    "FantasyStartFight": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [180, 930, 360, 230],
+                "expected": ["开始战斗"]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target_offset": [12, 8, -24, -16]
+            }
+        },
+        "next": ["FantasyEnableAutoClear"],
+        "post_delay": 700
+    },
+    "FantasyEnableAutoClear": {
+        "recognition": {
+            "type": "DirectHit"
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [42, 833, 12, 12]
+            }
+        },
+        "next": ["FantasyLeaveBattleImmediately"],
+        "post_delay": 600
+    },
+    "FantasyLeaveBattleImmediately": {
+        "recognition": {
+            "type": "DirectHit"
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [18, 1190, 82, 70]
+            }
+        },
+        "next": ["End"],
+        "post_delay": 800
+    },
+    "FantasyWaitBattle": {
+        "recognition": {
+            "type": "DirectHit"
+        },
+        "action": {
+            "type": "DoNothing"
+        },
+        "next": [
+            "FantasyAutoRunning",
+            "FantasyBattleFailed",
+            "FantasyWaitBattle"
+        ],
+        "max_hit": 120,
+        "post_delay": 2000
+    },
+    "FantasyBattleFailed": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [170, 390, 380, 250],
+                "expected": ["战斗失败"]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [18, 1190, 82, 70]
+            }
+        },
+        "next": ["FantasyFailureStageBack"],
+        "post_delay": 800
+    },
+    "FantasyFailureStageBack": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [470, 70, 235, 960],
+                "expected": ["^挑战$"]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [18, 1190, 82, 70]
+            }
+        },
+        "next": ["FantasyBackToWeekly"],
+        "post_delay": 800
+    },
+    "FantasyAutoRunning": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [420, 130, 285, 850],
+                "expected": ["自动推关中"]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [18, 1190, 82, 70]
+            }
+        },
+        "next": ["FantasyBackToWeekly"],
+        "post_delay": 800
+    },
+    "FantasyBackToWeekly": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [20, 40, 680, 430],
+                "expected": ["当前.*层", "胜利通关"]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [18, 1190, 82, 70]
+            }
+        },
+        "next": ["End"],
+        "post_delay": 800
+    }
+}

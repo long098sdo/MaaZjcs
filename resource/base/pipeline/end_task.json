@@ -1,0 +1,30 @@
+{
+    "EndTask": {
+        "recognition": {
+            "type": "DirectHit"
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "shutdown_mumu",
+                "custom_action_param": {}
+            }
+        },
+        "timeout": 120000,
+        "focus": {
+            "Node.Action.Succeeded": {
+                "content": "结束任务：已确认 MuMu 所有实例和主程序关闭",
+                "display": [
+                    "log"
+                ]
+            },
+            "Node.Action.Failed": {
+                "content": "结束任务：关闭 MuMu 模拟器失败",
+                "display": [
+                    "log",
+                    "toast"
+                ]
+            }
+        }
+    }
+}

@@ -1,0 +1,15 @@
+{
+    "CancelPuzzleDifficultyChange": {
+        "recognition": { "type": "OCR", "param": {
+            "roi": [120,520,490,110], "expected": ["切换难度后不会保存当前关卡状态"]
+        } }
+    },
+    "ConfirmPuzzleExit": {
+        "recognition": { "type": "OCR", "param": {
+            "roi": [120,520,490,110], "expected": ["退出后不会保存当前关卡状态"]
+        } }
+    },
+    "NavigationRecovery": {
+        "action": { "type": "Custom", "param": { "custom_action": "navigation_guard" } }
+    }
+}

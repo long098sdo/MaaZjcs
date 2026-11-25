@@ -1,0 +1,18 @@
+{
+    "ShadowExitVote": {"recognition":{"type":"OCR","param":{"roi":[100,490,530,130],"expected":["是否要发起退出本次幻境的投票"]}}},
+    "ShadowBattleWave": {"recognition":{"type":"OCR","param":{"roi":[490,230,230,200],"expected":["当前波次"]}}},
+    "ShadowOpen": {"next":["ShadowDailyEntry","[JumpBack]ShadowOpenNote","[JumpBack]CardPage"]},
+    "ShadowOpenNote": {"recognition":{"type":"TemplateMatch","param":{"roi":[3,1147,714,133],"template":"button/note.png"}},"action":{"type":"Click"},"max_hit":1,"post_delay":3000},
+    "ShadowDailyEntry": {"recognition":{"type":"OCR","param":{"roi":[350,330,360,500],"expected":["每日活动"]}},"action":{"type":"Click"},"next":["ShadowBanner"],"post_delay":1200},
+    "ShadowBanner": {"recognition":{"type":"OCR","param":{"roi":[0,100,720,950],"expected":["双影幻境"]}},"action":{"type":"Click"},"next":["ShadowDetail"],"post_delay":1200},
+    "ShadowDetail": {"recognition":{"type":"OCR","param":{"roi":[0,0,350,100],"expected":["双影幻境"]}}},
+    "ShadowMatch": {"recognition":{"type":"OCR","param":{"roi":[370,1040,340,110],"expected":["^匹配$"]}},"action":{"type":"Click"}},
+    "ShadowAccept": {"recognition":{"type":"OCR","param":{"roi":[360,1040,350,120],"expected":["^接受$"]}},"action":{"type":"Click"}},
+    "ShadowReady": {"recognition":{"type":"OCR","param":{"roi":[100,750,540,410],"expected":["^准备$","^准备战斗$"]}},"action":{"type":"Click"}},
+    "ShadowAlreadyReady": {"recognition":{"type":"OCR","param":{"roi":[100,750,540,410],"expected":["取消准备","消准备"]}}},
+    "ShadowBattle": {"recognition":{"type":"OCR","param":{"roi":[180,0,420,160],"expected":["回合.*[0-9]+/[0-9]+"]}}},
+    "ShadowSummary": {"recognition":{"type":"OCR","param":{"roi":[0,0,720,1280],"expected":["战斗结束","点击空白处关闭"]}},"action":{"type":"Click","param":{"target":[300,1150,100,60]}}},
+    "ShadowReward": {"recognition":{"type":"TemplateMatch","param":{"roi":[40,840,650,160],"template":"lint/red_lint.png"}}},
+    "ShadowClaimedTick": {"recognition":{"type":"TemplateMatch","param":{"roi":[40,840,650,160],"template":"button/shadow_claimed_tick.png","threshold":0.88}}},
+    "ShadowProgress": {"recognition":{"type":"OCR","param":{"roi":[160,790,460,65],"expected":["今日最多击破波次.*[0-9]+"]}}}
+}

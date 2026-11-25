@@ -1,0 +1,847 @@
+{
+    "Energy": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "verification_checkpoint",
+                "custom_action_param": { "task": "使用体力", "operation": "reset" }
+            }
+        },
+        "next": [
+            "EnergyPrepareMain"
+        ]
+    },
+    "EnergyPrepareMain": {
+        "action": { "type": "Custom", "param": { "custom_action": "navigation_guard" } },
+        "next": [
+            "[JumpBack]CancelFortuneFruitSpend",
+            "[JumpBack]ClosePlayerProfile",
+            "[JumpBack]LeaveCompetitionPage",
+            "[JumpBack]LeaveCurrentPage",
+            "[JumpBack]CloseGift",
+            "[JumpBack]CloseByClickBlank",
+            "[JumpBack]CardPage",
+            "UseEnergy"
+        ]
+    },
+    "LeaveCompetitionPage": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [0, 0, 180, 100],
+                "expected": ["竞技"]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [28, 1208, 18, 18]
+            }
+        },
+        "next": ["Loading", "End"],
+        "post_delay": 1000,
+        "max_hit": 1
+    },
+    "UseEnergy": {
+        "next": [
+            "PigByEnergy", // 杀猪
+            "GoldByEnergy", // 挖金币
+            "IronByEnergy", // 挖铁
+            "GravelByEnergy", // 挖砂
+            "LeaveCurrentPage"
+        ]
+    },
+    "PigByEnergy": {
+        "enabled": false,
+        "next": [
+            "EnterForestCountry",
+            "[JumpBack]WorldPage",
+            "[JumpBack]ChooseLowerFloor",
+            "[JumpBack]SwipeSearchForestCountry"
+        ],
+        "max_hit": 1
+    },
+    "GoldByEnergy": {
+        "enabled": false,
+        "next": [
+            "[JumpBack]NotePage",
+            "[JumpBack]ExploreResourcePage",
+            "ChooseGold"
+        ],
+        "max_hit": 1
+    },
+    "IronByEnergy": {
+        "enabled": false,
+        "next": [
+            "[JumpBack]NotePage",
+            "[JumpBack]ExploreResourcePage",
+            "ChooseIron"
+        ],
+        "max_hit": 1
+    },
+    "GravelByEnergy": {
+        "enabled": false,
+        "next": [
+            "[JumpBack]NotePage",
+            "[JumpBack]ExploreResourcePage",
+            "ChooseGravel"
+        ],
+        "max_hit": 1
+    },
+    "ExploreResourcePage": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    5,
+                    519,
+                    413,
+                    170
+                ],
+                "expected": [
+                    "地图探索"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        }
+    },
+    "ChooseLowerFloor": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    26,
+                    999,
+                    43,
+                    46
+                ],
+                "template": [
+                    "button/lower_floor.png"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "post_delay": 2000,
+        "max_hit": 1
+    },
+    "EnterForestCountry": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "森之国"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "[JumpBack]Loading",
+            "[JumpBack]Chat",
+            "OpenMap"
+        ]
+    },
+    "SwipeSearchForestCountry": {
+        "next": [
+            "SwipeLeftSearchForestCountry",
+            "SwipeRightSearchForestCountry",
+            "SwipeUpSearchForestCountry",
+            "SwipeDownSearchForestCountry",
+            "End"
+        ]
+    },
+    "SwipeLeftSearchForestCountry": {
+        "next": [
+            "SwipeLeft"
+        ],
+        "max_hit": 5
+    },
+    "SwipeRightSearchForestCountry": {
+        "next": [
+            "SwipeRight"
+        ],
+        "max_hit": 5
+    },
+    "SwipeUpSearchForestCountry": {
+        "next": [
+            "SwipeUp"
+        ],
+        "max_hit": 5
+    },
+    "SwipeDownSearchForestCountry": {
+        "next": [
+            "SwipeDown"
+        ],
+        "max_hit": 5
+    },
+    "OpenMap": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    523,
+                    244,
+                    199,
+                    54
+                ],
+                "expected": [
+                    "\\(\\d+,\\d+\\)" // 匹配任意坐标
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    562,
+                    135,
+                    116,
+                    89
+                ]
+            }
+        },
+        "next": [
+            "[JumpBack]FindInMap",
+            "KillPig",
+            "[JumpBack]CloseGift",
+            "[JumpBack]SlimeSearch",
+            "End"
+        ],
+        "post_delay": 2000
+    },
+    "FindInMap": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    560,
+                    35,
+                    152,
+                    192
+                ],
+                "expected": [
+                    "传送门"
+                ]
+            }
+        },
+        "next": [
+            "FindPig",
+            "[JumpBack]SwipeMapRight",
+            "[JumpBack]SwipeMapUp",
+            "[JumpBack]SwipeMapLeft"
+        ]
+    },
+    "SwipeMapRight": {
+        "next": [
+            "SwipeRight"
+        ],
+        "max_hit": 10
+    },
+    "SwipeMapUp": {
+        "next": [
+            "SwipeUp"
+        ],
+        "max_hit": 5
+    },
+    "SwipeMapLeft": {
+        "next": [
+            "SwipeLeft"
+        ],
+        "max_hit": 10
+    },
+    "FindPig": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "雕鸮营地"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "LeaveCurrentPage"
+        ]
+    },
+    "ExhaustEnergy": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "体力不足"
+                ]
+            }
+        },
+        "next": [
+            "End"
+        ]
+    },
+    "KillPig": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "template": [
+                    "materials/pig.png"
+                ],
+                "index": 0
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "ExhaustEnergy",
+            "EndAutoPage",
+            "[JumpBack]AutoButton",
+            "StartAutoPage"
+        ],
+        "max_hit": 1
+    },
+    "ChooseGold": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    22,
+                    270,
+                    316,
+                    68
+                ],
+                "template": [
+                    "materials/gold_light.png",
+                    "materials/gold_night.png"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "DepartForResource"
+        ]
+    },
+    "ChooseIron": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    22,
+                    270,
+                    316,
+                    68
+                ],
+                "template": [
+                    "materials/iron_light.png",
+                    "materials/iron_night.png"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "DepartForResource"
+        ]
+    },
+    "ChooseGravel": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    22,
+                    270,
+                    316,
+                    68
+                ],
+                "template": [
+                    "materials/gravel_light.png",
+                    "materials/gravel_night.png"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "DepartForResource"
+        ]
+    },
+    "DepartForResource": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    499,
+                    318,
+                    171,
+                    76
+                ],
+                "expected": [
+                    "前往"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "ConfirmDepartForResource"
+        ],
+        "post_delay": 2000
+    },
+    "ConfirmDepartForResource": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    445,
+                    714,
+                    98,
+                    43
+                ],
+                "expected": [
+                    "确定"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "[JumpBack]Loading",
+            "[JumpBack]Chat",
+            "DigResourceMain"
+        ],
+        "post_delay": 3000
+    },
+    "DigResourceMain": {
+        "next": [
+            "[JumpBack]LocateResource",
+            "AutoDigResource",
+            "[JumpBack]CloseGift",
+            "[JumpBack]SlimeSearch",
+            "End"
+        ],
+        "post_delay": 1000
+    },
+    "LocateResource": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "template": [
+                    "materials/gold_locate.png",
+                    "materials/iron_locate.png",
+                    "materials/gravel_locate.png"
+                ],
+                "order_by": "Score"
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "max_hit": 1
+    },
+    "SlimeSearch": {
+        "next": [
+            "[JumpBack]KillSlime",
+            "[JumpBack]SwipeSlimeUp",
+            "[JumpBack]SwipeSlimeDown",
+            "[JumpBack]SwipeSlimeUpBack",
+            "[JumpBack]SwipeSlimeLeft",
+            "[JumpBack]SwipeSlimeRight",
+            "[JumpBack]SwipeSlimeLeftBack",
+            "End"
+        ],
+        "max_hit": 1
+    },
+    "KillSlime": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "template": [
+                    "materials/slime.png"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "[JumpBack]Loading",
+            "[JumpBack]StartFight",
+            "CloseByClickBlank"
+        ],
+        "timeout": 120000 // 两分钟时间等待战斗结束
+    },
+    "SwipeSlimeUp": {
+        "next": [
+            "SwipeUp"
+        ],
+        "max_hit": 2
+    },
+    "SwipeSlimeDown": {
+        "next": [
+            "SwipeDown"
+        ],
+        "max_hit": 4  
+    },
+    "SwipeSlimeUpBack": {
+        "next": [
+            "SwipeUp"
+        ],
+        "max_hit": 2
+    },
+    "SwipeSlimeLeft": {
+        "next": [
+            "SwipeLeft"
+        ],
+        "max_hit": 2
+    },
+    "SwipeSlimeRight": {
+        "next": [
+            "SwipeRight"
+        ],
+        "max_hit": 4
+    },
+    "SwipeSlimeLeftBack": {
+        "next": [
+            "SwipeLeft"
+        ],
+        "max_hit": 2
+    },
+    "AutoDigResource": {
+        "next": [
+            "ExhaustEnergy",
+            "EndAutoPage",
+            "[JumpBack]AutoButton",
+            "StartAutoPage"
+        ],
+        "max_hit": 1
+    },
+    "AutoButton": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "template": [
+                    "button/auto_button.png"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        }
+    },
+    "StartAutoPage": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    250,
+                    810,
+                    220,
+                    90
+                ],
+                "expected": [
+                    "开始托管"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    350,
+                    754,
+                    20,
+                    20
+                ]
+            }
+        },
+        "next": [
+            "InputAutoCount"
+        ]
+    },
+    "InputAutoCount": {
+        "action": {
+            "type": "InputText",
+            "param": {
+                "input_text": "6" // 默认6次
+            }
+        },
+        "next": [
+            "StartAutoUseEnergy"
+        ]
+    },
+    "StartAutoUseEnergy": {
+        "action":{"type":"Custom","param":{"custom_action":"energy_record_plan"}},
+        "next":["EnergyStartVerified"]
+    },
+    "EnergyCostNumbers": {"recognition":{"type":"OCR","param":{"roi":[450,580,160,65],"expected":["[0-9]+[/／][0-9]+"]}}},
+    "EnergyKeyboardDone":{"recognition":{"type":"OCR","param":{"roi":[530,1170,190,110],"expected":["^确定$"]}}},
+    "EnergyMainNumbers": {"recognition":{"type":"OCR","param":{"roi":[610,20,105,70],"expected":["[0-9]+[/／][0-9]+"]}}},
+    "EnergyStartVerified": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    250,
+                    810,
+                    220,
+                    90
+                ],
+                "expected": [
+                    "开始托管"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    344,
+                    838,
+                    32,
+                    18
+                ]
+            }
+        },
+        "next": ["VerifyEnergyStarted", "VerifyEnergyReturnedMap"],
+        "post_delay": 1500
+    },
+    "VerifyEnergyStarted": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [220,790,280,130],
+                "expected": ["结束托管"]
+            }
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "verification_checkpoint",
+                "custom_action_param": { "task": "使用体力", "operation": "mark", "checkpoint": "托管已启动" }
+            }
+        },
+        "next": ["WaitEnergyCollection"],
+        "timeout": 10000
+    },
+    "VerifyEnergyReturnedMap": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "template": ["button/auto_button.png"]
+            }
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "verification_checkpoint",
+                "custom_action_param": { "task": "使用体力", "operation": "mark", "checkpoint": "托管已启动" }
+            }
+        },
+        "next": ["WaitEnergyCollection"]
+    },
+    "WaitEnergyCollection": {
+        "recognition": "DirectHit",
+        "action": { "type": "DoNothing" },
+        "next": ["EnergyReturnToMain"],
+        "post_delay": 120000,
+        "focus": {
+            "Node.Action.Starting": {
+                "content": "托管已启动，等待 2 分钟完成采集后再执行下一项任务",
+                "display": ["log", "toast"]
+            }
+        }
+    },
+    "EnergyReturnToMain": {
+        "action":{"type":"Custom","param":{"custom_action":"energy_wait_consumption"}},
+        "next":["EnergyNavigateAfterConsumption"]
+    },
+    "EnergyNavigateAfterConsumption": {
+        "action": {
+            "type": "Custom",
+            "param": { "custom_action": "navigation_guard" }
+        },
+        "next": ["VerifyEnergyCompleted"]
+    },
+    "VerifyEnergyCompleted": {
+        "action":{"type":"Custom","param":{"custom_action":"energy_verify_consumption"}}
+    },
+    "VerifyEnergyStartedLegacy": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "verification_checkpoint",
+                "custom_action_param": {
+                    "task": "使用体力",
+                    "operation": "verify",
+                    "required": ["托管已启动"]
+                }
+            }
+        },
+        "focus": {
+            "Node.Action.Failed": {
+                "content": "使用体力复核失败：点击开始托管后未返回资源地图",
+                "display": ["log", "toast"]
+            }
+        }
+    },
+    "VerifyAllEnergyCompleted": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "verification_checkpoint",
+                "custom_action_param": {
+                    "task": "使用体力",
+                    "operation": "verify",
+                    "required": ["体力已耗尽"]
+                }
+            }
+        },
+        "focus": {
+            "Node.Action.Failed": {
+                "content": "使用体力复核失败：尚未确认当前体力不足以继续托管",
+                "display": ["log", "toast"]
+            }
+        }
+    },
+    "InputExhaustEnergyCount": {
+        "action":{"type":"Custom","param":{"custom_action":"energy_select_all_verified"}},
+        "next":["EnergyExhaustProceed"]
+    },
+    "EnergyExhaustProceed":{"next":["StartAutoUseEnergy"]},
+    "NoEnergyToUse": {
+        "recognition": {
+            "type": "ColorMatch",
+            "param": {
+                "roi": [475,580,115,70],
+                "method": 4,
+                "lower": [170,0,0],
+                "upper": [255,150,150],
+                "count": 20
+            }
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "verification_checkpoint",
+                "custom_action_param": { "task": "使用体力", "operation": "mark", "checkpoint": "托管已启动" }
+            }
+        },
+        "focus": {
+            "Node.Recognition.Succeeded": {
+                "content": "当前体力不足以托管 1 次，结束使用体力任务",
+                "display": ["log"]
+            }
+        },
+        "next": ["VerifyEnergyCompleted"]
+    },
+    "IncreaseExhaustEnergyCount": {
+        "recognition": "DirectHit",
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    528,
+                    760,
+                    16,
+                    16
+                ]
+            }
+        },
+        "next": [
+            "ExhaustEnergyOverLimit",
+            "IncreaseExhaustEnergyCount"
+        ],
+        "post_delay": 250,
+        "max_hit": 1000
+    },
+    "ExhaustEnergyOverLimit": {
+        "recognition": {
+            "type": "ColorMatch",
+            "param": {
+                "roi": [
+                    475,
+                    580,
+                    115,
+                    70
+                ],
+                "method": 4,
+                "lower": [
+                    170,
+                    0,
+                    0
+                ],
+                "upper": [
+                    255,
+                    150,
+                    150
+                ],
+                "count": 20
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    176,
+                    760,
+                    16,
+                    16
+                ]
+            }
+        },
+        "next": [
+            "StartAutoUseEnergy"
+        ],
+        "post_delay": 500
+    },
+    "EndAutoPage": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    250,
+                    810,
+                    220,
+                    90
+                ],
+                "expected": [
+                    "结束托管"
+                ]
+            }
+        },
+        "next": ["MarkEnergyAlreadyRunning"]
+    },
+    "MarkEnergyAlreadyRunning": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "verification_checkpoint",
+                "custom_action_param": { "task": "使用体力", "operation": "mark", "checkpoint": "托管已启动" }
+            }
+        },
+        "next": ["WaitEnergyCollection"]
+    },
+    "LeaveAutoPage": {
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    317,
+                    1059,
+                    83,
+                    37
+                ]
+            }
+        }
+    }
+}

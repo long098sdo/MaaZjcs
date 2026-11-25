@@ -1,0 +1,51 @@
+{
+    "Wish": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "wish_runner",
+                "custom_action_param": {
+                    "高阶祈愿": 0,
+                    "常驻祈愿": 0,
+                    "友情祈愿": 0
+                }
+            }
+        },
+        "next": [
+            "NavigationRecovery"
+        ]
+    },
+    "WishTargetAdvanced": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "wish_runner",
+                "custom_action_param": {
+                    "value": -1
+                }
+            }
+        }
+    },
+    "WishTargetRegular": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "wish_runner",
+                "custom_action_param": {
+                    "value": -1
+                }
+            }
+        }
+    },
+    "WishTargetFriend": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "wish_runner",
+                "custom_action_param": {
+                    "value": -1
+                }
+            }
+        }
+    }
+}

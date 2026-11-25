@@ -1,0 +1,436 @@
+{
+    // 通用的结束节点，无任何动作
+    "End": {
+        "action": {
+            "type": "DoNothing"
+        }
+    },
+    // 通用加载任务识别
+    "Loading": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "加载",
+                    "稍候",
+                    "资源清单",
+                    "初始化"
+                ]
+            }
+        },
+        "next": [
+            "WaitLoadingGone"
+        ],
+        "timeout": 120000,  // 2分钟加载时间
+        "on_error": [
+            "StuckHandler"
+        ]
+    },
+    // 等待加载任务完成
+    "WaitLoadingGone": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [450, 1060, 270, 220],
+                "expected": [
+                    "加载",
+                    "载中",
+                    "^加$",
+                    "稍候",
+                    "资源清单",
+                    "初始化"
+                ]
+            }
+        },
+        "inverse": true,
+        "post_delay": 500
+    },
+    // 处理卡顿或超时
+    "StuckHandler": {
+        "action": {
+            "type": "StopApp",
+            "param": {
+                "package": "com.leiting.zjcs"
+            }
+        },
+        "focus": {
+            "Node.Action.Starting": {
+                "content": "流程卡顿或超时，已关闭游戏",
+                "display": [
+                    "log",
+                    "toast"
+                ]
+            }
+        },
+        "next": [
+            "RestartGame"
+        ]
+    },
+    // 重启游戏
+    "RestartGame": {
+        "post_delay": 5000,
+        "next": [
+            "StartUp"
+        ],
+        "focus": {
+            "Node.Action.Starting": {
+                "content": "重启游戏",
+                "display": [
+                    "log",
+                    "toast"
+                ]
+            }
+        },
+        "max_hit": 2
+    },
+    // 关闭礼包弹窗
+    "CloseGift": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [121,135,469,532],
+                "expected": [
+                    "礼包"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",  // 点击空白区域关闭礼包弹窗
+            "param": {
+                "target": [
+                    35,
+                    101,
+                    163,
+                    169
+                ]
+            }
+        }
+    },
+    "GiftPopupExpiry": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [100,500,520,210],
+                "expected": ["礼包消失", "购买礼包后"]
+            }
+        }
+    },
+    // 点击空白处关闭
+    "CloseByClickBlank": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "点击空白处关闭"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "Loading",
+            "End"
+        ]
+    },
+    "CancelFortuneFruitSpend": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [90,430,540,360],
+                "expected": ["消耗.*命运果实", "是否消耗.*命运果实"]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [230,800,20,20]
+            }
+        },
+        "next": ["End"],
+        "post_delay": 500,
+        "focus": {
+            "Node.Action.Succeeded": {
+                "content": "资源保护：已取消命运果实消耗确认",
+                "display": ["log", "toast"]
+            }
+        }
+    },
+    // 离开当前页面
+    "LeaveCurrentPage": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    15,1174,120,96
+                ],
+                "template": [
+                    "button/leave_button1.png",
+                    "button/leave_button2.png",
+                    "button/leave_button3.png",
+                    "button/leave_button4.png",
+                    "button/leave_button5.png"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target_offset": [18,17,-36,-34]
+            }
+        },
+        "next": [
+            "Loading",
+            "End"
+        ],
+        "post_delay": 1000
+    },
+    "CardPage": {
+        "recognition": { 
+            "type": "TemplateMatch",
+            "param": {
+                "template": [
+                    "lint/card_left_bottom_corner.png",
+                    "lint/card_left_top_corner.png",
+                    "lint/card_right_top_corner.png",
+                    "lint/card_right_bottom_corner.png"
+                ],
+                "threshold": [
+                    0.9
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [339,1161,75,57]
+            }
+        }
+    },
+    "ClosePlayerProfile": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [260,250,450,180],
+                "expected": ["玩家编号", "添加好友", "^更多$"]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": { "target": [690,80,20,20] }
+        },
+        "next": ["End"],
+        "post_delay": 800
+    },
+    // 返回家园主页面
+    "HomePage": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    3,
+                    1147,
+                    714,
+                    133
+                ],
+                "template": [
+                    "button/home.png"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "max_hit": 1,
+        "post_delay": 3000
+    },
+    "NotePage": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    3,
+                    1147,
+                    714,
+                    136
+                ],
+                "template": [
+                    "button/note.png"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "max_hit": 1,
+        "post_delay": 3000
+    },
+    "WorldPage": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    3,
+                    1147,
+                    714,
+                    136
+                ],
+                "template": [
+                    "button/world.png"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "max_hit": 1,
+        "post_delay": 3000
+    },
+    "GuildPage": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    3,
+                    1147,
+                    714,
+                    136
+                ],
+                "template": [
+                    "button/guild.png"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "max_hit": 1,
+        "post_delay": 3000
+    },
+    "CharcterPage": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    3,
+                    1147,
+                    714,
+                    136
+                ],
+                "template": [
+                    "button/character.png"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "max_hit": 1,
+        "post_delay": 3000
+    },
+    // 向左划动
+    "SwipeLeft": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "bounded_map_swipe",
+                "custom_action_param": { "direction": "left" }
+            }
+        }
+    },
+    // 向右划动
+    "SwipeRight": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "bounded_map_swipe",
+                "custom_action_param": { "direction": "right" }
+            }
+        }
+    },
+    "SwipeUp": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "bounded_map_swipe",
+                "custom_action_param": { "direction": "up" }
+            }
+        }
+    },
+    "SwipeDown": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "bounded_map_swipe",
+                "custom_action_param": { "direction": "down" }
+            }
+        }
+    },
+    // 进入战斗
+    "StartFight": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "开始战斗"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        }
+    },
+    "CleanHomeAnimal": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [309,602,308,441],
+                "template": [
+                    "home_animal/bird_light1.png",
+                    "home_animal/bird_light2.png",
+                    "home_animal/bird_night1.png",
+                    "home_animal/bird_night2.png",
+                    "home_animal/bird_night3.png",
+                    "home_animal/mouse_light1.png",
+                    "home_animal/mouse_night1.png",
+                    "home_animal/mouse_night2.png",
+                    "home_animal/grass_light1.png",
+                    "home_animal/grass_light2.png",
+                    "home_animal/grass_light3.png",
+                    "home_animal/grass_light4.png"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        }
+    },
+    "Chat": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [300,1214,123,62],
+                "template": [
+                    "button/next_chat.png"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        }
+    },
+    "ReceivePrize": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [177,334,375,81],
+                "expected": [
+                    "获得奖励"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        }
+    }
+}

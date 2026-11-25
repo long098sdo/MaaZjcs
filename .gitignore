@@ -1,0 +1,14 @@
+/agent/vendor/
+/resource/base/image/
+/resource/base/model/
+/config/
+/logs/
+/debug/
+/temp/
+__pycache__/
+*.pyc
+*.dll
+*.exe
+*.zip
+*.keystore
+*.jks

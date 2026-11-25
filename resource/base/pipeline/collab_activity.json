@@ -1,0 +1,99 @@
+{
+    "CollabActivity": {
+        "action": { "type": "Custom", "param": { "custom_action": "navigation_guard" } },
+        "next": [
+            "[JumpBack]CancelFortuneFruitSpend",
+            "[JumpBack]ReceivePrize",
+            "[JumpBack]LeaveCurrentPage",
+            "[JumpBack]CloseGift",
+            "[JumpBack]CloseByClickBlank",
+            "[JumpBack]CardPage",
+            "[JumpBack]HomePage",
+            "CollabOpenActivity"
+        ]
+    },
+    "CollabOpenActivity": {
+        "recognition": "DirectHit",
+        "action": { "type": "Click", "param": { "target": [640, 125, 60, 80] } },
+        "next": ["CollabScanEntry"],
+        "post_delay": 1800
+    },
+    "CollabScanEntry":{"action":{"type":"Custom","param":{"custom_action":"collab_entry_scan"}}},
+    "CollabEventList":{"recognition":{"type":"OCR","param":{"roi":[0,0,300,100],"expected":["活动汇总"]}}},
+    "CollabEventBanner":{"recognition":{"type":"OCR","param":{"roi":[0,100,720,1040],"expected":["联动活动","联动.*开启"]}}},
+    "CollabOpenLinked": {
+        "recognition": { "type": "OCR", "param": { "roi": [0, 100, 720, 1040], "expected": ["联动活动","联动.*开启"] } },
+        "action": { "type": "Click", "param": { "target_offset": [0, -35, 0, 100] } },
+        "next": ["[JumpBack]CollabRunPuzzle", "[JumpBack]CollabRunBattle", "End"],
+        "post_delay": 1800
+    },
+    "CollabRunBattle": {
+        "action": { "type": "Custom", "param": { "custom_action": "collab_battle_runner" } },
+        "next": ["End"],
+        "max_hit": 1,
+        "timeout": 1200000
+    },
+    "CollabRunPuzzle": {
+        "action": { "type": "Custom", "param": { "custom_action": "collab_puzzle_runner" } },
+        "next": ["End"],
+        "max_hit": 1,
+        "timeout": 1200000
+    },
+    "CollabPuzzleSolverTest": {
+        "action": { "type": "Custom", "param": { "custom_action": "collab_puzzle_solver" } },
+        "next": ["End"],
+        "timeout": 600000
+    },
+    "CollabBattleRunnerTest": {
+        "action": { "type": "Custom", "param": { "custom_action": "collab_battle_runner" } },
+        "next": ["End"],
+        "timeout": 1200000
+    },
+    "CollabPuzzleRunnerTest": {
+        "action": { "type": "Custom", "param": { "custom_action": "collab_puzzle_runner" } },
+        "next": ["End"],
+        "timeout": 1200000
+    },
+    "CollabBattleMap": {
+        "recognition": { "type": "OCR", "param": { "roi": [80, 1080, 560, 200], "expected": ["普通", "困难"] } }
+    },
+    "CollabBattleAvailable": {
+        "recognition": { "type": "TemplateMatch", "param": { "roi": [0, 80, 720, 980], "template": "lint/red_lint.png", "threshold": 0.72 } }
+    },
+    "CollabBattleContent": {
+        "recognition": { "type": "OCR", "param": { "roi": [0, 100, 720, 980], "expected": ["^[0-9]{2}[^0-9]", "挑战关卡", "后开放"] } }
+    },
+    "CollabPuzzleList": {
+        "recognition": { "type": "OCR", "param": { "roi": [0, 20, 720, 100], "expected": ["剩余"] } }
+    },
+    "CollabBattleEnter": {
+        "recognition": { "type": "OCR", "param": { "roi": [150, 760, 420, 300], "expected": ["^进入$"] } }
+    },
+    "CollabBattleStart": {
+        "recognition": { "type": "OCR", "param": { "roi": [300, 920, 420, 300], "expected": ["开始战斗"] } }
+    },
+    "CollabBattleReward": {
+        "recognition": { "type": "OCR", "param": { "roi": [80, 200, 560, 700], "expected": ["获得奖励", "战斗胜利"] } }
+    },
+    "CollabBattleFailed": {
+        "recognition": { "type": "OCR", "param": { "roi": [80, 200, 560, 700], "expected": ["战斗失败", "挑战失败"] } }
+    },
+    "CollabPuzzleAvailable": {
+        "recognition": { "type": "TemplateMatch", "param": { "roi": [20, 100, 680, 1000], "template": "lint/red_lint.png", "threshold": 0.72 } }
+    },
+    "CollabPuzzleResetDialog": {
+        "recognition": { "type": "OCR", "param": { "roi": [100, 380, 520, 470], "expected": ["重置拼图"] } }
+    },
+    "CollabPuzzleReward": {
+        "recognition": { "type": "OCR", "param": { "roi": [0, 240, 720, 320], "expected": ["获得奖励"] } }
+    },
+    "CollabPuzzleComplete": {
+        "recognition": { "type": "OCR", "param": { "roi": [180, 900, 360, 140], "expected": ["通关奖励"] } }
+    },
+    "CollabPuzzleClaimed": {
+        "recognition": { "type": "TemplateMatch", "param": { "roi": [280, 1000, 160, 120], "template": ["collab/puzzle_claimed_tick.png", "collab/puzzle_reward_tick_v2.png"], "threshold": 0.8 } }
+    },
+    "CollabPuzzleTabClaimed": {
+        "recognition": { "type": "TemplateMatch", "param": { "roi": [275, 1185, 40, 30], "template": ["collab/puzzle_tab_tick.png", "collab/puzzle_tab_tick_outline.png"], "threshold": 0.8 } }
+    }
+}

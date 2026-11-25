@@ -1,2 +1,26 @@
-# MaaZjcs
-A Windows daily-task assistant for the official Wand and Sword client.
+# MaaZjcs · 杖剑传说自动化助手
+
+基于 MaaFramework 和 MFAAvalonia 的 Windows x64 自动化助手。首个发布候选版面向 **MuMu 模拟器中的杖剑传说官服**。请在模拟器中自行安装游戏并登录。
+
+## 首次使用
+
+1. 将整个压缩包解压到有写入权限的目录，双击 `启动杖剑自动化.cmd`。便携包已带 Python 和 .NET。
+2. 启动 MuMu，在模拟器设置中开启 ADB 调试。在 MFA 顶部选择「模拟器」，搜索并选中自己的 MuMu 设备。找不到时先确认游戏画面已在 MuMu 中打开，再重新搜索。
+3. 点击任务名称看说明，点齿轮设置次数和开关。建议先单独试「领取邮件」，再安排整组任务。启用购买、抽取、捐赠或分解前，先核对预期消耗。
+4. 默认不开启任务、定时器和补跑。手动验证后，再在定时设置里指定时间和配置。需要自动关模拟器时，把「结束任务」放在队列最后；它会关闭所有 MuMu 实例。
+
+## 更新与反馈
+
+候选版使用手动更新。将新版本解压到新目录，再选设备和配置任务。测试期间保留旧目录，以便回退。
+
+反馈时注明版本、游戏渠道、MuMu 版本、失败任务及时间，附对应的 `logs/log-日期.log` 片段及失败截图。分享前请遮盖玩家编号、私聊和本机路径。
+
+## 许可
+
+根目录 `LICENSE` 为项目原有许可；组件的许可和来源见 `THIRD-PARTY-NOTICES.md`。
+
+## 本仓库与发行包
+
+本仓库提供项目编排、识别流程和 Python 源码。源码目录用于审阅和开发，运行版通过 GitHub Releases 分发。游戏截图识别模板、OCR 模型和第三方 Windows 运行文件均独立于源码目录。首次公开发行正在准备。
+
+Windows 候选版使用官方 MFAAvalonia v2.16.6，对应源码提交为 [8646e0c](https://github.com/MaaXYZ/MFAAvalonia/tree/8646e0c34fa1fc52cd32505bc2020bae7da9d76a)。

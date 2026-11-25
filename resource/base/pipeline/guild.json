@@ -1,0 +1,900 @@
+{
+    "Guild": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "verification_checkpoint",
+                "custom_action_param": { "task": "公会", "operation": "reset" }
+            }
+        },
+        "next": [
+            "GuildPrepareMain"
+        ]
+    },
+    "GuildPrepareMain": {
+        "action": {
+            "type": "Custom",
+            "param": { "custom_action": "navigation_guard" }
+        },
+        "next": [
+            "[JumpBack]CancelFortuneFruitSpend",
+            "[JumpBack]LeaveCurrentPage",
+            "[JumpBack]CloseGift",
+            "[JumpBack]CloseByClickBlank",
+            "[JumpBack]CardPage",
+            "[JumpBack]GuildPage",
+            "GuildEntryFromHomeFallback",
+            "VerifyGuildEntry"
+        ]
+    },
+    "GuildEntryFromHomeFallback": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [280, 1180, 160, 100],
+                "expected": ["^家园$"]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": { "target": [465, 1180, 80, 100] }
+        },
+        "next": ["VerifyGuildEntry"],
+        "post_delay": 3000,
+        "max_hit": 1
+    },
+    "VerifyGuildEntry": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [5, 113, 708, 929],
+                "expected": ["大厅", "公会大厅", "公会大[厅厂]", "远征之门", "冶炼工坊", "^田园$", "^鸡舍$", "[藏截]书库"]
+            }
+        },
+        "action": { "type": "DoNothing" },
+        "next": ["SearchGuildDonationRight"],
+        "timeout": 10000,
+        "focus": {
+            "Node.Recognition.Failed": {
+                "content": "未确认进入公会页面，已停止公会任务，避免在主界面误操作",
+                "display": ["log", "toast"]
+            }
+        }
+    },
+    "SearchGuildDonationRight": {
+        "next": [
+            "[JumpBack]GuildIdleReward",
+            "[JumpBack]GuildHome",
+            "GuildDonationRightEdge",
+            "[JumpBack]SwipeGuildRight",
+            "VerifyGuildDonationStage"
+        ]
+    },
+    "SearchGuildDonationLeft": {
+        "next": [
+            "[JumpBack]GuildIdleReward",
+            "[JumpBack]GuildHome",
+            "GuildDonationLeftEdge",
+            "[JumpBack]SwipeGuildLeft",
+            "VerifyGuildDonationStage"
+        ]
+    },
+    "GuildDonationRightEdge": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "冶炼工坊"
+                ]
+            }
+        },
+        "next": [
+            "SearchGuildDonationLeft"
+        ]
+    },
+    "GuildDonationLeftEdge": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "^田园$"
+                ]
+            }
+        },
+        "next": ["VerifyGuildDonationStage"]
+    },
+    "VerifyGuildDonationStage": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "verification_checkpoint",
+                "custom_action_param": {
+                    "task": "公会",
+                    "operation": "verify",
+                    "required": ["捐赠次数已核对"]
+                }
+            }
+        },
+        "next": ["SearchGuildLeft"],
+        "focus": {
+            "Node.Action.Failed": {
+                "content": "公会捐赠复核失败：未进入公会大厅或未确认捐赠次数，已停止后续公会流程",
+                "display": ["log", "toast"]
+            }
+        }
+    },
+    "SearchGuildRight": {
+        "next": [
+            "[JumpBack]GuildIdleReward",
+            "[JumpBack]Farmland",
+            "[JumpBack]HenHouse",
+            "GuildGate",
+            // "[JumpBack]GuildStore",
+            // "[JumpBack]SheepPen",
+            "GuildRightEdge",
+            "[JumpBack]SwipeGuildRight",
+            "VerifyGuildCompleted"
+        ]
+    },
+    "SearchGuildLeft": {
+        "next": [
+            "[JumpBack]GuildIdleReward",
+            "[JumpBack]Farmland",
+            "[JumpBack]HenHouse",
+            // "[JumpBack]GuildStore",
+            // "[JumpBack]SheepPen",
+            "GuildLeftEdge",
+            "[JumpBack]SwipeGuildLeft",
+            "VerifyGuildCompleted"
+        ]
+    },
+    "GuildRightEdge": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "冶炼工坊"
+                ]
+            }
+        },
+        "next": [
+            "VerifyGuildCompleted"
+        ]
+    },
+    "GuildLeftEdge": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "^田园$"
+                ]
+            }
+        },
+        "next": ["SearchGuildRight"]
+    },
+    "SwipeGuildRight": {
+        "next": [
+            "SwipeRight"
+        ],
+        "max_hit": 8
+    },
+    "SwipeGuildLeft": {
+        "next": [
+            "SwipeLeft"
+        ],
+        "max_hit": 8
+    },
+    "GuildHome": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    5,
+                    113,
+                    708,
+                    929
+                ],
+                "expected": [
+                    "大厅",
+                    "公会大厅",
+                    "会大"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "DonateButton"
+        ],
+        "post_delay": 1000,
+        "max_hit": 1
+    },
+    "GuildIdleReward": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [548, 985, 172, 140],
+                "expected": ["(?:[0-9]{1,2}:)?[0-9]{2}:[0-9]{2}"]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": { "target": [600, 970, 55, 55] }
+        },
+        "post_delay": 1200,
+        "max_hit": 1,
+        "next": ["GuildIdleRewardAfterOpen"]
+    },
+    "GuildIdleRewardAfterOpen": {
+        "next": [
+            "[JumpBack]ReceivePrize",
+            "GuildIdleRewardClaim",
+            "GuildIdleRewardConfirmed"
+        ]
+    },
+    "GuildIdleRewardClaim": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [110, 550, 500, 650],
+                "expected": ["^领取$", "领取奖励", "一键领取"]
+            }
+        },
+        "action": { "type": "Click" },
+        "post_delay": 1000,
+        "next": ["GuildIdleRewardAfterClaim"]
+    },
+    "GuildIdleRewardAfterClaim": {
+        "next": ["[JumpBack]ReceivePrize", "GuildIdleRewardConfirmed"]
+    },
+    "GuildIdleRewardConfirmed": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [548, 985, 172, 140],
+                "expected": ["(?<![0-9])(?:00:)?00:[0-5][0-9](?![0-9])"]
+            }
+        },
+        "next": ["MarkGuildIdleRewardChecked"],
+        "timeout": 8000
+    },
+    "MarkGuildIdleRewardChecked": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "verification_checkpoint",
+                "custom_action_param": { "task": "公会", "operation": "mark", "checkpoint": "公会挂机奖励已检查" }
+            }
+        }
+    },
+    "DonateButton": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    29,
+                    1003,
+                    672,
+                    131
+                ],
+                "template": [
+                    "button/donate_button.png"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "StopDonate",
+            "[JumpBack]Donate",
+            "FinishDonate"
+        ],
+        "post_delay": 2000
+    },
+    "StopDonate": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    415,
+                    866,
+                    57,
+                    37
+                ],
+                "expected": [
+                    "(?<![0-9])[0-5]/5(?![0-9])"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    307,
+                    1052,
+                    106,
+                    48
+                ]
+            }
+        },
+        "next": [
+            "MarkGuildDonationCompleted"
+        ]
+    },
+    "Donate": {
+        "max_hit": 0,
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    415,
+                    866,
+                    57,
+                    37
+                ],
+                "expected": [
+                    "(?!)"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    234,
+                    910,
+                    250,
+                    56
+                ]
+            }
+        },
+        "next": [
+            "ConfirmDonate",
+            "End"
+        ],
+        "post_delay": 1000
+    },
+    "FinishDonate": {
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    307,
+                    1052,
+                    106,
+                    48
+                ]
+            }
+        },
+        "next": [
+            "MarkGuildDonationCompleted"
+        ]
+    },
+    "MarkGuildDonationCompleted": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "verification_checkpoint",
+                "custom_action_param": { "task": "公会", "operation": "mark", "checkpoint": "捐赠次数已核对" }
+            }
+        },
+        "next": ["LeaveCurrentPage"]
+    },
+    "ConfirmDonate": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    435,
+                    713,
+                    124,
+                    47
+                ],
+                "expected": [
+                    "确定"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        }
+    },
+    "GuildGate": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    5,
+                    113,
+                    708,
+                    929
+                ],
+                "expected": [
+                    "远征"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target_offset": [0, -130, 0, 0]
+            }
+        },
+        "next": [
+            "EnterBossPage",
+            "RetryGuildGateEntry"
+        ],
+        "post_delay": 2000,
+        "max_hit": 1
+    },
+    "EnterBossPage": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [90, 150, 540, 760],
+                "expected": [
+                    "公会讨伐",
+                    "会讨伐"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": ["GuildBossPageReady"],
+        "post_delay": 2000,
+        "max_hit": 1
+    },
+    "RetryGuildGateEntry": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [5, 113, 708, 929],
+                "expected": ["远征"]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target_offset": [0, -130, 0, 0]
+            }
+        },
+        "next": ["EnterBossPage", "RetryGuildGateEntry"],
+        "post_delay": 1500,
+        "max_hit": 2,
+        "focus": {
+            "Node.Action.Starting": {
+                "content": "公会讨伐入口尚未打开，正在重新点击远征之门建筑",
+                "display": ["log"]
+            }
+        }
+    },
+    "GuildBossPageReady": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [150, 10, 420, 90],
+                "expected": ["今日剩余讨伐次数[：:] *[0-2]/2"]
+            }
+        },
+        "next": ["GuildBossLoop"],
+        "timeout": 10000,
+        "focus": {
+            "Node.Recognition.Failed": {
+                "content": "未确认进入公会讨伐页面，拒绝执行挑战",
+                "display": ["log", "toast"]
+            }
+        }
+    },
+    "GuildBossLoop": {
+        "recognition": "DirectHit",
+        "next": [
+            "[JumpBack]RecordGuildBossRemaining",
+            "[JumpBack]DefeatBoss",
+            "GuildBossAttemptsExhausted",
+            "GuildBossParticipationActive",
+            "[JumpBack]ChallengeBoss",
+            "VerifyGuildBossActionDone"
+        ]
+    },
+    "GuildBossRemainingOCR": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [205,20,330,70],
+                "expected": ["今日剩余讨伐次数[：:] *[0-2]/2"]
+            }
+        }
+    },
+    "RecordGuildBossRemaining": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [205,20,330,70],
+                "expected": ["今日剩余讨伐次数[：:] *[0-2]/2"]
+            }
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "guild_boss_remaining_guard",
+                "custom_action_param": { "task": "公会", "operation": "record" }
+            }
+        },
+        "max_hit": 1
+    },
+    "DefeatBoss": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    210,
+                    940,
+                    305,
+                    86
+                ],
+                "expected": [
+                    "已击败"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    330,
+                    703,
+                    64,
+                    63
+                ]
+            }
+        },
+        "next": [
+            "[JumpBack]ReceivePrize",
+            "ChooseNextBoss"
+        ],
+        "post_delay": 2000
+    },
+    "ChooseNextBoss": {
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    459,
+                    880,
+                    44,
+                    28
+                ]
+            }
+        }
+    },
+    "ChallengeBoss": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    205,
+                    943,
+                    328,
+                    85
+                ],
+                "expected": [
+                    "挑战"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "[JumpBack]Loading",
+            "JoinGuildBossFight",
+            "StartGuildBossFight",
+            "GuildBossBattlePage",
+            "[JumpBack]StartFight",
+            "[JumpBack]CloseByClickBlank",
+            "GuildBossBattleWait"
+        ],
+        "post_delay": 2000,
+        "max_hit": 1
+    },
+    "JoinGuildBossFight": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [230, 870, 265, 180],
+                "expected": ["加入战斗"]
+            }
+        },
+        "action": { "type": "Click" },
+        "next": ["GuildBossExitBattle"],
+        "post_delay": 3000,
+        "max_hit": 1
+    },
+    "StartGuildBossFight": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [230, 870, 265, 180],
+                "expected": ["开始战斗"]
+            }
+        },
+        "action": { "type": "Click" },
+        "next": ["GuildBossBattleWait"],
+        "post_delay": 3000,
+        "max_hit": 1
+    },
+    "GuildBossBattlePage": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [180, 0, 360, 120],
+                "expected": ["回合[：:] *[0-9]+/50"]
+            }
+        },
+        "action": { "type": "DoNothing" },
+        "next": ["GuildBossBattleWait"],
+        "post_delay": 5000,
+        "max_hit": 72
+    },
+    "GuildBossBattleWait": {
+        "recognition": "DirectHit",
+        "action": { "type": "DoNothing" },
+        "next": ["JoinGuildBossFight", "StartGuildBossFight", "[JumpBack]CloseByClickBlank", "GuildBossRemainingDecreased", "GuildBossBattlePage", "GuildBossBattleWait"],
+        "post_delay": 5000,
+        "max_hit": 72
+    },
+    "GuildBossExitBattle": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [15, 1174, 120, 96],
+                "template": [
+                    "button/leave_button1.png",
+                    "button/leave_button2.png",
+                    "button/leave_button3.png",
+                    "button/leave_button4.png",
+                    "button/leave_button5.png"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": { "target_offset": [18, 17, -36, -34] }
+        },
+        "next": ["[JumpBack]Loading", "GuildBossWaitForResult"],
+        "post_delay": 2000,
+        "timeout": 30000
+    },
+    "GuildBossWaitForResult": {
+        "recognition": "DirectHit",
+        "action": { "type": "DoNothing" },
+        "next": ["JoinGuildBossFight", "StartGuildBossFight", "GuildBossBattlePage", "GuildBossParticipationActive", "GuildBossRemainingDecreased", "[JumpBack]CloseByClickBlank", "GuildBossWaitForResult"],
+        "post_delay": 5000,
+        "max_hit": 72
+    },
+    "GuildBossParticipationActive": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [205, 943, 328, 85],
+                "expected": ["切回"]
+            }
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "guild_boss_remaining_guard",
+                "custom_action_param": { "task": "公会", "operation": "mark_participation_active" }
+            }
+        },
+        "next": ["VerifyGuildBossActionDone"],
+        "max_hit": 1
+    },
+    "GuildBossRemainingDecreased": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [205,20,330,70],
+                "expected": ["今日剩余讨伐次数[：:] *[0-2]/2"]
+            }
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "guild_boss_remaining_guard",
+                "custom_action_param": { "task": "公会", "operation": "verify_decreased" }
+            }
+        },
+        "next": ["GuildBossLoop"],
+        "max_hit": 2
+    },
+    "GuildBossAttemptsExhausted": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [210,20,300,65],
+                "expected": ["今日剩余讨伐次数[：:] *0/2"]
+            }
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "verification_checkpoint",
+                "custom_action_param": { "task": "公会", "operation": "mark", "checkpoint": "首领挑战次数已核对" }
+            }
+        },
+        "next": ["LeaveGuildBossPage", "VerifyGuildCompleted"]
+    },
+  "LeaveGuildBossPage": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [15, 1174, 120, 96],
+                "template": [
+                    "button/leave_button1.png",
+                    "button/leave_button2.png",
+                    "button/leave_button3.png",
+                    "button/leave_button4.png",
+                    "button/leave_button5.png"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": { "target_offset": [18, 17, -36, -34] }
+        },
+        "next": ["VerifyGuildCompleted"],
+        "post_delay": 1000
+    },
+    "VerifyGuildBossActionDone": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "guild_boss_remaining_guard",
+                "custom_action_param": {
+                    "task": "公会",
+                    "operation": "verify_requested",
+                    "requested": 1
+                }
+            }
+        },
+        "next": ["MarkGuildBossFlowChecked"],
+        "focus": {
+            "Node.Action.Failed": {
+                "content": "公会讨伐复核失败：未按设置完成首领挑战",
+                "display": ["log", "toast"]
+            }
+        }
+    },
+    "MarkGuildBossFlowChecked": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "verification_checkpoint",
+                "custom_action_param": { "task": "公会", "operation": "mark", "checkpoint": "首领挑战次数已核对" }
+            }
+        },
+        "next": ["LeaveGuildBossPage", "VerifyGuildCompleted"]
+    },
+    "VerifyGuildCompleted": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "verification_checkpoint",
+                "custom_action_param": {
+                    "task": "公会",
+                    "operation": "verify",
+                    "required": ["捐赠次数已核对", "首领挑战次数已核对", "田园友情币已检查", "鸡舍友情币已检查", "公会挂机奖励已检查"]
+                }
+            }
+        },
+        "focus": {
+            "Node.Action.Failed": {
+                "content": "公会复核失败：捐赠、首领挑战、田园、鸡舍友情币或挂机奖励仍有步骤未确认",
+                "display": ["log", "toast"]
+            }
+        }
+    },
+    "GuildStore": {},
+    "SheepPen": {},
+    "Farmland": {
+        "recognition": {"type": "OCR", "param": {"roi": [5, 113, 708, 929], "expected": ["^田园$"]}},
+        "action": {
+            "type": "Click",
+            "param": {"target_offset": [0, -120, 0, 0]}
+        },
+        "post_delay": 1500,
+        "max_hit": 1,
+        "next": ["WaitFarmFriendshipPage", "RetryFarmlandEntry"]
+    },
+    "WaitFarmFriendshipPage": {
+        "recognition": {
+            "type": "OCR",
+            "param": {"roi": [20, 20, 270, 70], "expected": ["田园"]}
+        },
+        "next": ["FarmFriendshipCollect"]
+    },
+    "RetryFarmlandEntry": {
+        "recognition": {
+            "type": "OCR",
+            "param": {"roi": [5, 113, 708, 929], "expected": ["^田园$"]}
+        },
+        "action": {
+            "type": "Click",
+            "param": {"target_offset": [0, -120, 0, 0]}
+        },
+        "next": ["WaitFarmFriendshipPage", "RetryFarmlandEntry"],
+        "post_delay": 1500,
+        "max_hit": 2,
+        "focus": {
+            "Node.Action.Starting": {
+                "content": "田园入口尚未打开，正在重新点击建筑主体",
+                "display": ["log"]
+            }
+        }
+    },
+    "HenHouse": {
+        "recognition": {"type": "OCR", "param": {"roi": [5, 113, 708, 929], "expected": ["^鸡舍$"]}},
+        "action": {
+            "type": "Click",
+            "param": {"target_offset": [0, -100, 0, 0]}
+        },
+        "post_delay": 1500,
+        "max_hit": 1,
+        "next": ["WaitHenFriendshipPage", "RetryHenHouseEntry"]
+    },
+    "WaitHenFriendshipPage": {
+        "recognition": {
+            "type": "OCR",
+            "param": {"roi": [20, 20, 270, 70], "expected": ["鸡舍"]}
+        },
+        "next": ["HenFriendshipCollect"]
+    },
+    "RetryHenHouseEntry": {
+        "recognition": {"type": "OCR", "param": {"roi": [5, 113, 708, 929], "expected": ["^鸡舍$"]}},
+        "action": {
+            "type": "Click",
+            "param": {"target_offset": [0, -100, 0, 0]}
+        },
+        "next": ["WaitHenFriendshipPage", "RetryHenHouseEntry"],
+        "post_delay": 1500,
+        "max_hit": 2,
+        "focus": {
+            "Node.Action.Starting": {
+                "content": "鸡舍入口尚未打开，正在重新点击建筑主体",
+                "display": ["log"]
+            }
+        }
+    },
+    "FarmFriendshipPage": {
+        "recognition": {"type": "OCR", "param": {"roi": [20, 20, 270, 70], "expected": ["田园"]}}
+    },
+    "HenFriendshipPage": {
+        "recognition": {"type": "OCR", "param": {"roi": [20, 20, 270, 70], "expected": ["鸡舍"]}}
+    },
+    "FarmFriendshipIcon": {
+        "recognition": {"type": "TemplateMatch", "param": {"roi": [20, 110, 680, 860], "template": "button/guild_water.png", "threshold": 0.88}}
+    },
+    "HenFriendshipIcon": {
+        "recognition": {"type": "TemplateMatch", "param": {"roi": [20, 110, 680, 860], "template": "button/guild_clean.png", "threshold": 0.88}}
+    },
+    "FarmFriendshipCollect": {
+        "action": {"type": "Custom", "param": {"custom_action": "guild_friendship_collect", "custom_action_param": {"area": "田园"}}},
+        "next": ["MarkFarmFriendship"]
+    },
+    "HenFriendshipCollect": {
+        "action": {"type": "Custom", "param": {"custom_action": "guild_friendship_collect", "custom_action_param": {"area": "鸡舍"}}},
+        "next": ["MarkHenFriendship"]
+    },
+    "MarkFarmFriendship": {
+        "action": {"type": "Custom", "param": {"custom_action": "verification_checkpoint", "custom_action_param": {"task": "公会", "operation": "mark", "checkpoint": "田园友情币已检查"}}},
+        "next": ["LeaveCurrentPage"]
+    },
+    "MarkHenFriendship": {
+        "action": {"type": "Custom", "param": {"custom_action": "verification_checkpoint", "custom_action_param": {"task": "公会", "operation": "mark", "checkpoint": "鸡舍友情币已检查"}}},
+        "next": ["LeaveCurrentPage"]
+    }
+}

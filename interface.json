@@ -1,0 +1,1516 @@
+{
+    "interface_version": 2,
+    "name": "MaaZjcs",
+    "label": "MaaZjcs",
+    "icon": "./resource/base/image/icon.png",
+    "description": "这是一个使用 MaaFramework 创建的杖剑传说自动化项目。",
+    "license": "MIT",
+    "welcome": "欢迎使用 MaaZjcs!",
+    "github": "https://github.com/long098sdo/MaaZjcs",
+    "version": "v0.0.1-local",
+    "agent": {
+        "child_exec": "python",
+        "child_args": [
+            "./agent/main.py"
+        ]
+    },
+    "controller": [
+        {
+            "name": "ADB",
+            "label": "模拟器",
+            "type": "Adb",
+            "display_short_side": 720
+        }
+    ],
+    "resource": [
+        {
+            "name": "官服",
+            "path": [
+                "./resource/base"
+            ]
+        }
+    ],
+    "task": [
+        {
+            "name": "启动游戏",
+            "entry": "StartUp",
+            "description": "把本任务放在队列开头，并选择对应的官服或 B 服资源及 MuMu 设备。本任务会检查 MuMu 第 0 个实例，按需启动并等待连接，再打开游戏；已进入游戏时直接继续。首次登录、更新游戏或账号验证请在模拟器中手动完成。"
+        },
+        {
+            "name": "商店购买",
+            "entry": "Store",
+            "description": "在任务设置中分别选杂货和宝库的购买格数，按页面顺序购买前 N 格；任何一页买不齐时，优先检查余额和货品状态。杂货可设刷新次数，设 0 则不刷新；每次都先处理当前页目标格，再核对剩余刷新次数。金币不足时停止当前购买流程，宝库只购买、不刷新。请先确认愿意消耗商店货币。",
+            "option": [
+                "杂货购买格数",
+                "杂货刷新次数",
+                "宝库购买格数"
+            ]
+        },
+        {
+            "name": "领取邮件",
+            "entry": "Mail",
+            "description": "进入游戏并勾选本任务即可检查邮件、领取可领取的附件。可以放在启动游戏之后。没有新附件时，在游戏邮件页查看当前状态；游戏登录或弹窗阻挡时先手动恢复到主界面。"
+        },
+        {
+            "name": "领取床",
+            "entry": "Bed",
+            "description": "从家园查找床并领取已累积的休息奖励。无需设置次数；建议在启动游戏后执行。床无可领收益时，可在游戏中检查床的状态和累积进度。"
+        },
+        {
+            "name": "命运之树",
+            "entry": "Tree",
+            "description": "在每日结缘次数中填写当天目标，0 表示跳过结缘。进入命运之树后读取游戏中的今日次数，只补差额；每次消耗结缘绳并核对次数。购买宠物素材是独立选项，只有愿意消耗兑换资源时才开启并选择素材。",
+            "option": [
+                "每日结缘次数",
+                "购买宠物素材"
+            ]
+        },
+        {
+            "name": "祈愿",
+            "entry": "Wish",
+            "default_check": false,
+            "description": "分别填写高阶祈愿、常驻祈愿和友情祈愿今天要达到的总次数；不抽的池填 0。核对池子、相应道具和单次费用后逐次祈愿。已确认归属的手动次数会计入；游戏总次数与记录无法对上时暂停，请人工核对各池次数。",
+            "option": ["高阶祈愿次数", "常驻祈愿次数", "友情祈愿次数"]
+        },
+        {
+            "name": "时光扭蛋机（国度）",
+            "entry": "CountryGacha",
+            "default_check": false,
+            "description": "蓝、紫、橙、金四种国度券分别填写每日目标，不抽的券种填 0。每次核对券种、券余额和单次费用 10 张，以结果页确认的次数继续。手动抽取次数无法归属时暂停。当前任务只处理国度池。",
+            "option": ["国度蓝券次数", "国度紫券次数", "国度橙券次数", "国度金券次数"]
+        },
+        {
+            "name": "领小推车",
+            "entry": "Cart",
+            "description": "从家园查找小推车并领取已累积的车上奖励，无需设置次数。建议在启动游戏后执行；若入口没有可领内容，可在家园手动核对小推车的状态。"
+        },
+        {
+            "name": "找回奖励",
+            "entry": "RewardRecovery",
+            "description": "在家园寻找菲乐并处理可找回的奖励。菲乐只在有可找回内容时出现；搜索到边界仍未见入口时结束。勾选前可先在游戏中确认愿意处理当前可找回项目。"
+        },
+        {
+            "name": "使用素材",
+            "entry": "Material",
+            "description": "先多选铁矿、金矿、精华或砂矿，程序逐种依次处理。每种的额外购买和使用方式独立：先按购买设置处理，再按默认次数开凿、用完库存或不使用。购买选 1 次或 2 次会消耗钻石（设置标示每次 60 钻）；不想花钻石请给各素材选不购买。开凿时会尝试开启快捷开凿。",
+            "option": [
+                "素材多选",
+                "铁矿额外购买次数",
+                "金矿额外购买次数",
+                "精华额外购买次数",
+                "砂矿额外购买次数",
+                "铁矿使用方式",
+                "金矿使用方式",
+                "精华使用方式",
+                "砂矿使用方式"
+            ]
+        },
+        {
+            "name": "竞技场",
+            "entry": "Arena",
+            "description": "在挑战次数中填本次计划挑战的次数，勾选后从笔记进入竞技场。程序按可用挑战次数推进，并复核挑战完成或次数已耗尽。初次使用可先设 1 次，确认匹配和返回流程适合当前账号。",
+            "option": [
+                "挑战次数"
+            ]
+        },
+        {
+            "name": "羁绊冒险",
+            "label": "羁绊冒险（待开发中）",
+            "entry": "Adventure",
+            "description": "勾选后从笔记尝试进入羁绊冒险。该流程仍在开发中，请先手动确定冒险选项及通关条件，暂时建议取消定时勾选；测试时请单独运行并查看进度。"
+        },
+        {
+            "name": "使用体力",
+            "entry": "Energy",
+            "description": "先选择体力用途（铁矿、金矿、砂矿或杀猪），再选择按填写次数或耗尽当前体力。耗尽模式会按游戏显示的消耗与余额确定可托管次数。点击开始托管后等待约 2 分钟，再确认结束才继续队列；超时会报失败。",
+            "option": [
+                "体力选择",
+                "体力消耗模式",
+                "体力使用次数"
+            ]
+        },
+        {
+            "name": "使用命运果实",
+            "label": "使用命运果实（待开发中）",
+            "entry": "Fruit",
+            "description": "该任务会尝试使用命运果实，可能消耗库存。启用前先在游戏内核对库存和用途，仅在明确希望使用时测试；暂时建议取消定时勾选。"
+        },
+        {
+            "name": "公会",
+            "entry": "Guild",
+            "description": "在公会设置填写捐赠的每日累计上限和首领挑战次数；不想执行相应操作填 0。还会检查大厅挂机奖励、田园水滴和鸡舍扫帚并领取友情币。首领已有成员挑战时仍可加入，程序复核发起挑战和可用次数。",
+            "option": [
+                "公会捐赠上限",
+                "公会首领次数"
+            ]
+        },
+        {
+            "name": "装备替换与分解",
+            "label": "装备替换与分解（待开发中）",
+            "entry": "Equipment",
+            "description": "该任务涉及装备替换和分解，请先手动核对装备、锁定状态与分解范围。功能仍在开发中，建议取消勾选并手动处理装备，以免分解希望保留的物品。"
+        },
+        {
+            "name":"委托","entry":"CommissionTask","default_check":false,
+            "option":["委托处理次数"],
+            "description":"设置当天总完成目标（0–4）。程序根据剩余免费提交次数计算今天已完成的次数，优先处理重金悬赏，并在需要时前往地图战斗、采集或合成。提交可能消耗委托材料；当前自动流程只用可确认的免费次数。"
+        },
+        {
+            "name":"糖果消消夜",
+            "label": "糖果消消夜（待开发中）","entry":"CandyNight","default_check":false,
+            "description":"从精彩活动的惊魂派对寻找糖果消消夜，当前流程面向闯关模式。程序识别棋盘后只做相邻交换，等待每步消除，再确认通关和奖励。竞速模式与道具购买请手动处理；活动变更时建议先单项观察。"
+        },
+        {
+            "name":"能量回路",
+            "label": "能量回路（待开发中）","entry":"EnergyCircuit","default_check":false,
+            "description":"从精彩活动查找菲涅克的谜题，自动识别并交换石板，逐步核对棋盘和领取状态。只处理可识别的关卡，不使用道具；入口随活动开放，初次使用建议单独运行观察。"
+        },
+        {
+            "name": "领取奖励",
+            "entry": "Prize",
+            "description": "勾选要领取的子项，建议保留领取免费奖励和禁止消耗钻石。可分别设置日常、周常、签到、秘宝、好友、活动、巡礼、商城及馈赠；委托默认跳过，建议视材料需求手动决定。日常复核只检查已经勾选的任务，未勾选的日常副本不会启动。",
+            "option": [
+                "领取免费奖励",
+                "禁止消耗钻石",
+                "好友友情币自动领取",
+                "赛季活动自动领取",
+                "神仙假期自动领取",
+                "惊奇日签自动领取",
+                "怪谈手册免费奖励",
+                "秘宝大作战自动领取",
+                "每日签到自动领取",
+                "日常任务自动领取",
+                "周常任务自动领取",
+                "委托自动处理",
+                "巡礼每日目标自动领取",
+                "巡礼每周目标自动领取",
+                "巡礼本期目标自动领取",
+                "巡礼之证自动领取",
+                "每日特惠自动领取",
+                "本周精选自动领取",
+                "商场全部红点奖励自动领取",
+                "馈赠自动领取"
+            ]
+        },
+        {
+            "name": "使用兑换码",
+            "label": "使用兑换码（待开发中）",
+            "entry": "RedeemCode",
+            "description": "在兑换码列表每行填写一个码，粘贴多行后检查录入内容。程序按顺序提交；显示已使用、过期或无效时继续处理后续兑换码。调试这一项时，可只勾选使用兑换码。",
+            "option": [
+                "兑换码列表"
+            ]
+        },
+        {
+            "name": "幻想阶梯",
+            "entry": "FantasyStairs",
+      "description": "勾选后进入幻想阶梯，优先选择列表第一张可推进关卡。开始战斗后开启左侧自动过关，再返回退出战斗画面，无需等结算；发现已在自动推进时跳过开战。"
+        },
+        {
+            "name": "每日活动",
+            "entry": "BeastTrial",
+            "description": "在设置中分别开关圣兽试炼和双影幻境。程序匹配、接受、准备，等战斗结束后返回对应活动领取奖励并复核。首次运行建议先开一项观察。无尽模式和魔物战争需手动处理。",
+            "option": ["每日圣兽试炼", "每日双影幻境"]
+        },
+        {
+            "name": "联动活动",
+            "entry": "CollabActivity",
+            "description": "分别启用联动拼图和联动战斗。拼图只移动拼图块并复核奖励；战斗按顺序检查普通和困难的可挑战关卡。活动名称和入口会轮换；新一期建议先单独运行确认识别效果。",
+            "option": [
+                "联动拼图",
+                "联动战斗"
+            ]
+        },
+        {
+            "name": "结束任务",
+            "entry": "EndTask",
+            "description": "仅在希望自动关掉 MuMu 时勾选，并放在所有要运行的游戏任务后面。执行后会关闭所有 MuMu 实例及主程序，并核对是否关闭。若同时在其他实例运行游戏，建议取消勾选。"
+        }
+    ],
+    "option": {
+        "每日圣兽试炼": {
+            "type":"switch","label":"圣兽试炼","default_case":"Yes",
+            "cases":[
+                {"name":"Yes","label":"执行","pipeline_override":{"BeastTrial":{"action":{"param":{"custom_action_param":{"beast":true}}}}}},
+                {"name":"No","label":"跳过","pipeline_override":{"BeastTrial":{"action":{"param":{"custom_action_param":{"beast":false}}}}}}
+            ]
+        },
+        "每日双影幻境": {
+            "type":"switch","label":"双影幻境","default_case":"Yes",
+            "cases":[
+                {"name":"Yes","label":"执行","pipeline_override":{"BeastTrial":{"action":{"param":{"custom_action_param":{"shadow":true}}}}}},
+                {"name":"No","label":"跳过","pipeline_override":{"BeastTrial":{"action":{"param":{"custom_action_param":{"shadow":false}}}}}}
+            ]
+        },
+        "杂货购买格数": {
+            "type": "select",
+            "label": "杂货购买前几个格子",
+            "description": "每轮从第1格开始，顺序购买到所选格数；购买完成后才允许刷新。",
+            "default_case": "9",
+            "cases": [
+                {
+                    "name": "1",
+                    "label": "前1格",
+                    "pipeline_override": {
+                        "GroceriesPurchase": {
+                            "next": [
+                                "GroceryInsufficientGold",
+                                "[JumpBack]GrocerySlot1",
+                                "StopGroceryRefresh",
+                                "[JumpBack]GroceriesRefresh",
+                                "Treasure"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "2",
+                    "label": "前2格",
+                    "pipeline_override": {
+                        "GroceriesPurchase": {
+                            "next": [
+                                "GroceryInsufficientGold",
+                                "[JumpBack]GrocerySlot1",
+                                "[JumpBack]GrocerySlot2",
+                                "StopGroceryRefresh",
+                                "[JumpBack]GroceriesRefresh",
+                                "Treasure"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "3",
+                    "label": "前3格",
+                    "pipeline_override": {
+                        "GroceriesPurchase": {
+                            "next": [
+                                "GroceryInsufficientGold",
+                                "[JumpBack]GrocerySlot1",
+                                "[JumpBack]GrocerySlot2",
+                                "[JumpBack]GrocerySlot3",
+                                "StopGroceryRefresh",
+                                "[JumpBack]GroceriesRefresh",
+                                "Treasure"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "4",
+                    "label": "前4格",
+                    "pipeline_override": {
+                        "GroceriesPurchase": {
+                            "next": [
+                                "GroceryInsufficientGold",
+                                "[JumpBack]GrocerySlot1",
+                                "[JumpBack]GrocerySlot2",
+                                "[JumpBack]GrocerySlot3",
+                                "[JumpBack]GrocerySlot4",
+                                "StopGroceryRefresh",
+                                "[JumpBack]GroceriesRefresh",
+                                "Treasure"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "5",
+                    "label": "前5格",
+                    "pipeline_override": {
+                        "GroceriesPurchase": {
+                            "next": [
+                                "GroceryInsufficientGold",
+                                "[JumpBack]GrocerySlot1",
+                                "[JumpBack]GrocerySlot2",
+                                "[JumpBack]GrocerySlot3",
+                                "[JumpBack]GrocerySlot4",
+                                "[JumpBack]GrocerySlot5",
+                                "StopGroceryRefresh",
+                                "[JumpBack]GroceriesRefresh",
+                                "Treasure"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "6",
+                    "label": "前6格",
+                    "pipeline_override": {
+                        "GroceriesPurchase": {
+                            "next": [
+                                "GroceryInsufficientGold",
+                                "[JumpBack]GrocerySlot1",
+                                "[JumpBack]GrocerySlot2",
+                                "[JumpBack]GrocerySlot3",
+                                "[JumpBack]GrocerySlot4",
+                                "[JumpBack]GrocerySlot5",
+                                "[JumpBack]GrocerySlot6",
+                                "StopGroceryRefresh",
+                                "[JumpBack]GroceriesRefresh",
+                                "Treasure"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "7",
+                    "label": "前7格",
+                    "pipeline_override": {
+                        "GroceriesPurchase": {
+                            "next": [
+                                "GroceryInsufficientGold",
+                                "[JumpBack]GrocerySlot1",
+                                "[JumpBack]GrocerySlot2",
+                                "[JumpBack]GrocerySlot3",
+                                "[JumpBack]GrocerySlot4",
+                                "[JumpBack]GrocerySlot5",
+                                "[JumpBack]GrocerySlot6",
+                                "[JumpBack]GrocerySlot7",
+                                "StopGroceryRefresh",
+                                "[JumpBack]GroceriesRefresh",
+                                "Treasure"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "8",
+                    "label": "前8格",
+                    "pipeline_override": {
+                        "GroceriesPurchase": {
+                            "next": [
+                                "GroceryInsufficientGold",
+                                "[JumpBack]GrocerySlot1",
+                                "[JumpBack]GrocerySlot2",
+                                "[JumpBack]GrocerySlot3",
+                                "[JumpBack]GrocerySlot4",
+                                "[JumpBack]GrocerySlot5",
+                                "[JumpBack]GrocerySlot6",
+                                "[JumpBack]GrocerySlot7",
+                                "[JumpBack]GrocerySlot8",
+                                "StopGroceryRefresh",
+                                "[JumpBack]GroceriesRefresh",
+                                "Treasure"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "9",
+                    "label": "前9格",
+                    "pipeline_override": {
+                        "GroceriesPurchase": {
+                            "next": [
+                                "GroceryInsufficientGold",
+                                "[JumpBack]GrocerySlot1",
+                                "[JumpBack]GrocerySlot2",
+                                "[JumpBack]GrocerySlot3",
+                                "[JumpBack]GrocerySlot4",
+                                "[JumpBack]GrocerySlot5",
+                                "[JumpBack]GrocerySlot6",
+                                "[JumpBack]GrocerySlot7",
+                                "[JumpBack]GrocerySlot8",
+                                "[JumpBack]GrocerySlot9",
+                                "StopGroceryRefresh",
+                                "[JumpBack]GroceriesRefresh",
+                                "Treasure"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        "杂货刷新次数": {
+            "type": "input",
+            "label": "杂货刷新次数",
+            "description": "可设置0到10次。每轮先购买完所选格子，再读取页面剩余刷新次数；剩余为0时绝不刷新。最后一次刷新后还会再购买一轮。",
+            "inputs": [
+                {
+                    "name": "次数",
+                    "label": "刷新次数",
+                    "pipeline_type": "int",
+                    "default": "0",
+                    "verify": "^(10|[0-9])$",
+                    "pattern_msg": "刷新次数只能填写0到10"
+                }
+            ],
+            "pipeline_override": {
+                "GroceriesRefresh": {
+                    "max_hit": "{次数}"
+                }
+            }
+        },
+        "宝库购买格数": {
+            "type": "select",
+            "label": "宝库购买前几个格子",
+            "description": "从第1格开始顺序购买到所选格数，宝库不会刷新。",
+            "default_case": "1",
+            "cases": [
+                {
+                    "name": "1",
+                    "label": "前1格",
+                    "pipeline_override": {
+                        "TreasurePurchase": {
+                            "next": ["TreasureInsufficientGold", "[JumpBack]TreasureSlot1", "LeaveCurrentPage"]
+                        }
+                    }
+                },
+                {
+                    "name": "2",
+                    "label": "前2格",
+                    "pipeline_override": {
+                        "TreasurePurchase": {
+                            "next": ["TreasureInsufficientGold", "[JumpBack]TreasureSlot1", "[JumpBack]TreasureSlot2", "LeaveCurrentPage"]
+                        }
+                    }
+                },
+                {
+                    "name": "3",
+                    "label": "前3格",
+                    "pipeline_override": {
+                        "TreasurePurchase": {
+                            "next": ["TreasureInsufficientGold", "[JumpBack]TreasureSlot1", "[JumpBack]TreasureSlot2", "[JumpBack]TreasureSlot3", "LeaveCurrentPage"]
+                        }
+                    }
+                },
+                {
+                    "name": "4",
+                    "label": "前4格",
+                    "pipeline_override": {
+                        "TreasurePurchase": {
+                            "next": ["TreasureInsufficientGold", "[JumpBack]TreasureSlot1", "[JumpBack]TreasureSlot2", "[JumpBack]TreasureSlot3", "[JumpBack]TreasureSlot4", "LeaveCurrentPage"]
+                        }
+                    }
+                },
+                {
+                    "name": "5",
+                    "label": "前5格",
+                    "pipeline_override": {
+                        "TreasurePurchase": {
+                            "next": ["TreasureInsufficientGold", "[JumpBack]TreasureSlot1", "[JumpBack]TreasureSlot2", "[JumpBack]TreasureSlot3", "[JumpBack]TreasureSlot4", "[JumpBack]TreasureSlot5", "LeaveCurrentPage"]
+                        }
+                    }
+                },
+                {
+                    "name": "6",
+                    "label": "前6格",
+                    "pipeline_override": {
+                        "TreasurePurchase": {
+                            "next": ["TreasureInsufficientGold", "[JumpBack]TreasureSlot1", "[JumpBack]TreasureSlot2", "[JumpBack]TreasureSlot3", "[JumpBack]TreasureSlot4", "[JumpBack]TreasureSlot5", "[JumpBack]TreasureSlot6", "LeaveCurrentPage"]
+                        }
+                    }
+                },
+                {
+                    "name": "7",
+                    "label": "前7格",
+                    "pipeline_override": {
+                        "TreasurePurchase": {
+                            "next": ["TreasureInsufficientGold", "[JumpBack]TreasureSlot1", "[JumpBack]TreasureSlot2", "[JumpBack]TreasureSlot3", "[JumpBack]TreasureSlot4", "[JumpBack]TreasureSlot5", "[JumpBack]TreasureSlot6", "[JumpBack]TreasureSlot7", "LeaveCurrentPage"]
+                        }
+                    }
+                },
+                {
+                    "name": "8",
+                    "label": "前8格",
+                    "pipeline_override": {
+                        "TreasurePurchase": {
+                            "next": ["TreasureInsufficientGold", "[JumpBack]TreasureSlot1", "[JumpBack]TreasureSlot2", "[JumpBack]TreasureSlot3", "[JumpBack]TreasureSlot4", "[JumpBack]TreasureSlot5", "[JumpBack]TreasureSlot6", "[JumpBack]TreasureSlot7", "[JumpBack]TreasureSlot8", "LeaveCurrentPage"]
+                        }
+                    }
+                },
+                {
+                    "name": "9",
+                    "label": "前9格",
+                    "pipeline_override": {
+                        "TreasurePurchase": {
+                            "next": ["TreasureInsufficientGold", "[JumpBack]TreasureSlot1", "[JumpBack]TreasureSlot2", "[JumpBack]TreasureSlot3", "[JumpBack]TreasureSlot4", "[JumpBack]TreasureSlot5", "[JumpBack]TreasureSlot6", "[JumpBack]TreasureSlot7", "[JumpBack]TreasureSlot8", "[JumpBack]TreasureSlot9", "LeaveCurrentPage"]
+                        }
+                    }
+                }
+            ]
+        },
+        "素材多选": {
+            "type": "checkbox",
+            "label": "选择素材（可多选）",
+            "description": "按铁矿、金矿、精华、砂矿的固定顺序逐项处理；每次开凿前确认快捷开凿已开启，无法确认时停止，不消耗素材。",
+            "default_case": ["铁矿"],
+            "cases": [
+                {
+                    "name": "铁矿",
+                    "pipeline_override": {
+                        "Iron": {
+                            "enabled": true
+                        }
+                    }
+                },
+                {
+                    "name": "金矿",
+                    "pipeline_override": {
+                        "Gold": {
+                            "enabled": true
+                        }
+                    }
+                },
+                {
+                    "name": "精华",
+                    "pipeline_override": {
+                        "Monster": {
+                            "enabled": true
+                        }
+                    }
+                },
+                {
+                    "name": "砂矿",
+                    "pipeline_override": {
+                        "Gravel": {
+                            "enabled": true
+                        }
+                    }
+                }
+            ]
+        },
+        "铁矿额外购买次数": {
+            "type": "select",
+            "label": "铁矿额外购买",
+            "description": "每次购买5个；只允许购买实测为60钻/次的前两次。购买前会核对铁矿锤、数量和总价，任一不符即取消。",
+            "default_case": "0",
+            "cases": [
+                {
+                    "name": "0", "label": "不购买",
+                    "pipeline_override": {
+                        "BuyIronMaterial": { "enabled": false },
+                        "DigIron": { "max_hit": 10 }
+                    }
+                },
+                {
+                    "name": "1", "label": "购买1次（60钻）",
+                    "pipeline_override": {
+                        "BuyIronMaterial": { "enabled": true, "next": ["ConfirmIronMaterialOne", "CancelMaterialPurchase"] },
+                        "DigIron": { "max_hit": 15 }
+                    }
+                },
+                {
+                    "name": "2", "label": "购买2次（共120钻）",
+                    "pipeline_override": {
+                        "BuyIronMaterial": { "enabled": true, "next": ["IncreaseIronMaterialPurchaseToTwo"] },
+                        "DigIron": { "max_hit": 20 }
+                    }
+                }
+            ]
+        },
+        "金矿额外购买次数": {
+            "type": "select",
+            "label": "金矿额外购买",
+            "description": "每次购买5个；只允许购买实测为60钻/次的前两次。购买前会核对金矿镐、数量和总价，任一不符即取消。",
+            "default_case": "0",
+            "cases": [
+                {
+                    "name": "0", "label": "不购买",
+                    "pipeline_override": {
+                        "BuyGoldMaterial": { "enabled": false },
+                        "DigGold": { "max_hit": 10 }
+                    }
+                },
+                {
+                    "name": "1", "label": "购买1次（60钻）",
+                    "pipeline_override": {
+                        "BuyGoldMaterial": { "enabled": true, "next": ["ConfirmGoldMaterialOne", "CancelMaterialPurchase"] },
+                        "DigGold": { "max_hit": 15 }
+                    }
+                },
+                {
+                    "name": "2", "label": "购买2次（共120钻）",
+                    "pipeline_override": {
+                        "BuyGoldMaterial": { "enabled": true, "next": ["IncreaseGoldMaterialPurchaseToTwo"] },
+                        "DigGold": { "max_hit": 20 }
+                    }
+                }
+            ]
+        },
+        "精华额外购买次数": {
+            "type": "select",
+            "label": "精华额外购买",
+            "description": "每次购买5个；只允许购买实测为60钻/次的前两次。购买前会核对陈旧拳套、数量和总价，任一不符即取消。",
+            "default_case": "0",
+            "cases": [
+                {
+                    "name": "0", "label": "不购买",
+                    "pipeline_override": {
+                        "BuyMonsterMaterial": { "enabled": false },
+                        "DigMonster": { "max_hit": 10 }
+                    }
+                },
+                {
+                    "name": "1", "label": "购买1次（60钻）",
+                    "pipeline_override": {
+                        "BuyMonsterMaterial": { "enabled": true, "next": ["ConfirmMonsterMaterialOne", "CancelMaterialPurchase"] },
+                        "DigMonster": { "max_hit": 15 }
+                    }
+                },
+                {
+                    "name": "2", "label": "购买2次（共120钻）",
+                    "pipeline_override": {
+                        "BuyMonsterMaterial": { "enabled": true, "next": ["IncreaseMonsterMaterialPurchaseToTwo"] },
+                        "DigMonster": { "max_hit": 20 }
+                    }
+                }
+            ]
+        },
+        "砂矿额外购买次数": {
+            "type": "select",
+            "label": "砂矿额外购买",
+            "description": "每次购买5个；只允许购买实测为60钻/次的前两次。购买前会核对砂矿铲、数量和总价，任一不符即取消。",
+            "default_case": "0",
+            "cases": [
+                {
+                    "name": "0", "label": "不购买",
+                    "pipeline_override": {
+                        "BuyGravelMaterial": { "enabled": false },
+                        "DigGravel": { "max_hit": 10 }
+                    }
+                },
+                {
+                    "name": "1", "label": "购买1次（60钻）",
+                    "pipeline_override": {
+                        "BuyGravelMaterial": { "enabled": true, "next": ["ConfirmGravelMaterialOne", "CancelMaterialPurchase"] },
+                        "DigGravel": { "max_hit": 15 }
+                    }
+                },
+                {
+                    "name": "2", "label": "购买2次（共120钻）",
+                    "pipeline_override": {
+                        "BuyGravelMaterial": { "enabled": true, "next": ["IncreaseGravelMaterialPurchaseToTwo"] },
+                        "DigGravel": { "max_hit": 20 }
+                    }
+                }
+            ]
+        },
+        "铁矿使用方式": {
+            "type": "select",
+            "label": "铁矿使用方式",
+            "description": "选择用完当前全部铁矿工具；购买次数仍遵循上方铁矿额外购买设置，购买失败或达到上限时直接使用现有工具。",
+            "default_case": "按默认次数",
+            "cases": [
+                { "name": "按默认次数", "label": "按购买设置使用", "pipeline_override": {} },
+                  { "name": "用完全部素材", "label": "用完目前所有铁矿", "pipeline_override": { "DigIron": { "max_hit": 9999 } } },
+                  { "name": "不使用", "label": "不使用（购买设置独立生效）", "pipeline_override": { "FinishIronWithoutUse": { "enabled": true }, "DigIron": { "enabled": false, "max_hit": 0 } } }
+            ]
+        },
+        "金矿使用方式": {
+            "type": "select",
+            "label": "金矿使用方式",
+            "description": "选择用完当前全部金矿工具；购买次数仍遵循上方金矿额外购买设置，购买失败或达到上限时直接使用现有工具。",
+            "default_case": "按默认次数",
+            "cases": [
+                { "name": "按默认次数", "label": "按购买设置使用", "pipeline_override": {} },
+                  { "name": "用完全部素材", "label": "用完目前所有金矿", "pipeline_override": { "DigGold": { "max_hit": 9999 } } },
+                  { "name": "不使用", "label": "不使用（购买设置独立生效）", "pipeline_override": { "FinishGoldWithoutUse": { "enabled": true }, "DigGold": { "enabled": false, "max_hit": 0 } } }
+            ]
+        },
+        "精华使用方式": {
+            "type": "select",
+            "label": "精华使用方式",
+            "description": "选择用完当前全部精华工具；购买次数仍遵循上方精华额外购买设置，购买失败或达到上限时直接使用现有工具。",
+            "default_case": "按默认次数",
+            "cases": [
+                { "name": "按默认次数", "label": "按购买设置使用", "pipeline_override": {} },
+                  { "name": "用完全部素材", "label": "用完目前所有精华", "pipeline_override": { "DigMonster": { "max_hit": 9999 } } },
+                  { "name": "不使用", "label": "不使用（购买设置独立生效）", "pipeline_override": { "FinishMonsterWithoutUse": { "enabled": true }, "DigMonster": { "enabled": false, "max_hit": 0 } } }
+            ]
+        },
+        "砂矿使用方式": {
+            "type": "select",
+            "label": "砂矿使用方式",
+            "description": "选择用完当前全部砂矿工具；购买次数仍遵循上方砂矿额外购买设置，购买失败或达到上限时直接使用现有工具。",
+            "default_case": "按默认次数",
+            "cases": [
+                { "name": "按默认次数", "label": "按购买设置使用", "pipeline_override": {} },
+                  { "name": "用完全部素材", "label": "用完目前所有砂矿", "pipeline_override": { "DigGravel": { "max_hit": 9999 } } },
+                  { "name": "不使用", "label": "不使用（购买设置独立生效）", "pipeline_override": { "FinishGravelWithoutUse": { "enabled": true }, "DigGravel": { "enabled": false, "max_hit": 0 } } }
+            ]
+        },
+        "委托处理次数": {
+            "type": "select",
+            "label": "每日完成总次数",
+            "description": "按今日已用免费提交次数计算总数；优先重金悬赏，达到目标后停止，不消耗委托卷轴。",
+            "default_case": "4",
+            "cases": [
+                {"name":"4","label":"4次","pipeline_override":{"CommissionRun":{"action":{"param":{"custom_action_param":{"count":4}}}}}},
+                {"name":"3","label":"3次","pipeline_override":{"CommissionRun":{"action":{"param":{"custom_action_param":{"count":3}}}}}},
+                {"name":"2","label":"2次","pipeline_override":{"CommissionRun":{"action":{"param":{"custom_action_param":{"count":2}}}}}},
+                {"name":"1","label":"1次","pipeline_override":{"CommissionRun":{"action":{"param":{"custom_action_param":{"count":1}}}}}},
+                {"name":"0","label":"不处理","pipeline_override":{"CommissionRun":{"action":{"param":{"custom_action_param":{"count":0}}}}}}
+            ]
+        },
+        "公会捐赠上限": {
+            "type": "select",
+            "label": "当天累计捐赠上限",
+            "description": "根据捐赠页面的x/5计数决定是否点击；例如当前2/5、上限3，只会再捐赠1次。计数识别失败时会安全退出，不会继续捐赠。",
+            "default_case": "3",
+            "cases": [
+                {
+                    "name": "0",
+                    "label": "不捐赠",
+                    "pipeline_override": {
+                        "StopDonate": {
+                            "recognition": {
+                                "param": {
+                                    "expected": ["(?<![0-9])[0-5]/5(?![0-9])"]
+                                }
+                            }
+                        },
+                        "Donate": {
+                            "recognition": {
+                                "param": {
+                                    "expected": ["(?!)"]
+                                }
+                            },
+                            "max_hit": 0
+                        }
+                    }
+                },
+                {
+                    "name": "1",
+                    "label": "累计最多1次",
+                    "pipeline_override": {
+                        "StopDonate": {
+                            "recognition": {
+                                "param": {
+                                    "expected": ["(?<![0-9])[1-5]/5(?![0-9])"]
+                                }
+                            }
+                        },
+                        "Donate": {
+                            "recognition": {
+                                "param": {
+                                    "expected": ["(?<![0-9])0/5(?![0-9])"]
+                                }
+                            },
+                            "max_hit": 1
+                        }
+                    }
+                },
+                {
+                    "name": "2",
+                    "label": "累计最多2次",
+                    "pipeline_override": {
+                        "StopDonate": {
+                            "recognition": {
+                                "param": {
+                                    "expected": ["(?<![0-9])[2-5]/5(?![0-9])"]
+                                }
+                            }
+                        },
+                        "Donate": {
+                            "recognition": {
+                                "param": {
+                                    "expected": ["(?<![0-9])[01]/5(?![0-9])"]
+                                }
+                            },
+                            "max_hit": 2
+                        }
+                    }
+                },
+                {
+                    "name": "3",
+                    "label": "累计最多3次",
+                    "pipeline_override": {
+                        "StopDonate": {
+                            "recognition": {
+                                "param": {
+                                    "expected": ["(?<![0-9])[3-5]/5(?![0-9])"]
+                                }
+                            }
+                        },
+                        "Donate": {
+                            "recognition": {
+                                "param": {
+                                    "expected": ["(?<![0-9])[0-2]/5(?![0-9])"]
+                                }
+                            },
+                            "max_hit": 3
+                        }
+                    }
+                },
+                {
+                    "name": "4",
+                    "label": "累计最多4次",
+                    "pipeline_override": {
+                        "StopDonate": {
+                            "recognition": {
+                                "param": {
+                                    "expected": ["(?<![0-9])[4-5]/5(?![0-9])"]
+                                }
+                            }
+                        },
+                        "Donate": {
+                            "recognition": {
+                                "param": {
+                                    "expected": ["(?<![0-9])[0-3]/5(?![0-9])"]
+                                }
+                            },
+                            "max_hit": 4
+                        }
+                    }
+                },
+                {
+                    "name": "5",
+                    "label": "累计最多5次",
+                    "pipeline_override": {
+                        "StopDonate": {
+                            "recognition": {
+                                "param": {
+                                    "expected": ["(?<![0-9])5/5(?![0-9])"]
+                                }
+                            }
+                        },
+                        "Donate": {
+                            "recognition": {
+                                "param": {
+                                    "expected": ["(?<![0-9])[0-4]/5(?![0-9])"]
+                                }
+                            },
+                            "max_hit": 5
+                        }
+                    }
+                }
+            ]
+        },
+        "公会首领次数": {
+            "type": "input",
+            "label": "挑战公会首领次数",
+            "description": "次数为0时跳过挑战；已有其他成员挑战时仍会继续挑战，达到游戏内次数限制时提前结束。",
+            "inputs": [
+                {
+                    "name": "首领次数",
+                    "label": "挑战公会首领次数",
+                    "pipeline_type": "int",
+                    "default": "1",
+                    "verify": "^(0|[1-9]\\d?)$"
+                }
+            ],
+            "pipeline_override": {
+                "ChallengeBoss": {
+                    "max_hit": "{首领次数}"
+                },
+                "VerifyGuildBossActionDone": {
+                    "action": {
+                        "param": {
+                            "custom_action_param": {
+                                "task": "公会",
+                                "operation": "verify_requested",
+                                "requested": "{首领次数}"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "挑战次数": {
+            "type": "input",
+            "label": "挑战次数",
+            "inputs": [
+                {
+                    "name": "次数",
+                    "pipeline_type": "int",
+                    "default": "3"
+                }
+            ],
+            "pipeline_override": {
+                "SelectAttackSlot": {
+                    "max_hit": "{次数}"
+                }
+            }
+        },
+        "体力选择": {
+            "type": "select",
+            "cases": [
+                {
+                    "name": "铁矿",
+                    "pipeline_override": {
+                        "IronByEnergy": {
+                            "enabled": true
+                        }
+                    }
+                },
+                {
+                    "name": "金矿",
+                    "pipeline_override": {
+                        "GoldByEnergy": {
+                            "enabled": true
+                        }
+                    }
+                },
+                {
+                    "name": "砂矿",
+                    "pipeline_override": {
+                        "GravelByEnergy": {
+                            "enabled": true
+                        }
+                    }
+                },
+                {
+                    "name": "杀猪",
+                    "pipeline_override": {
+                        "PigByEnergy": {
+                            "enabled": true
+                        }
+                    }
+                }
+            ]
+        },
+        "体力消耗模式": {
+            "type": "select",
+            "label": "体力消耗模式",
+            "description": "选择固定次数，或自动把采集次数调整到当前体力可承担的最大值（每次消耗5点）。",
+            "default_case": "固定次数",
+            "cases": [
+                {
+                    "name": "固定次数",
+                    "label": "按下方次数",
+                    "pipeline_override": {
+                        "StartAutoPage": {
+                            "next": ["InputAutoCount"]
+                        }
+                    }
+                },
+                {
+                    "name": "耗尽全部体力",
+                    "label": "耗尽当前全部体力",
+                    "pipeline_override": {
+                        "StartAutoPage": {
+                            "next": ["InputExhaustEnergyCount"]
+                        }
+                    }
+                }
+            ]
+        },
+        "体力使用次数": {
+            "type": "input",
+            "label": "体力使用次数",
+            "inputs": [
+                {
+                    "name": "次数",
+                    "pipeline_type": "string",
+                    "default": "6"
+                }
+            ],
+            "pipeline_override": {
+                "InputAutoCount": {
+                    "action": {
+                        "param": {
+                            "input_text": "{次数}"
+                        }
+                    }
+                }
+            }
+        },
+        "联动战斗": {
+            "type": "switch",
+            "label": "2. 战斗",
+            "description": "上下扫描普通和困难的整张地图；每次通关后重查新开放关卡，确认没有可挑战关卡后才完成。",
+            "default_case": "Yes",
+            "cases": [
+                { "name": "Yes", "label": "自动挑战", "pipeline_override": { "CollabRunBattle": { "enabled": true } } },
+                { "name": "No", "label": "跳过", "pipeline_override": { "CollabRunBattle": { "enabled": false } } }
+            ]
+        },
+        "联动拼图": {
+            "type": "switch",
+            "label": "1. 拼图（不使用道具）",
+            "description": "完成简单、普通和困难后等待领奖弹窗，关闭弹窗并复核奖励已领取；绿色快捷完成按钮永不点击。",
+            "default_case": "Yes",
+            "cases": [
+                { "name": "Yes", "label": "自动拼图", "pipeline_override": { "CollabRunPuzzle": { "enabled": true } } },
+                { "name": "No", "label": "跳过", "pipeline_override": { "CollabRunPuzzle": { "enabled": false } } }
+            ]
+        },
+        "兑换码列表": {
+            "type": "input",
+            "label": "兑换码列表",
+            "description": "支持每行一个，也支持用逗号或分号分隔。空白项和重复项会自动跳过。",
+            "inputs": [
+                {
+                    "name": "兑换码",
+                    "label": "兑换码",
+                    "pipeline_type": "string",
+                    "multiline": true,
+                    "default": "杖剑999\nvip999\n杖剑2026\nvip2026\n冒险者666\n冒险者888\n璀璨之星真好玩\n杖剑真好玩\n杖剑传说好多人\n睡觉升级好轻松\n和九月一起玩杖剑\n和敖烈一起玩杖剑\n和小玉一起玩杖剑\n和哪吒一起玩杖剑\n非人哉777\n非人哉888\n非人哉999\n杖剑传说非人哉联动\n玩杖剑送非人哉周边\n非人哉神仙福利\n电商超值礼包4号开售"
+                }
+            ],
+            "pipeline_override": {
+                "RedeemBatch": {
+                    "action": {
+                        "param": {
+                            "custom_action_param": {
+                                "codes": "{兑换码}"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "领取免费奖励": {
+            "type": "switch",
+            "label": "领取免费奖励",
+            "description": "只点击画面中明确显示“领取”的免费奖励；关闭后，领取奖励任务只检查页面，不执行领取。",
+            "default_case": "Yes",
+            "cases": [
+                {
+                    "name": "Yes",
+                    "label": "开启",
+                    "pipeline_override": {
+                        "FreePrizeGate": { "next": ["GetAllPrize"] }
+                    }
+                },
+                {
+                    "name": "No",
+                    "label": "关闭",
+                    "pipeline_override": {
+                        "FreePrizeGate": { "next": ["End"] }
+                    }
+                }
+            ]
+        },
+        "禁止消耗钻石": {
+            "type": "switch",
+            "label": "禁止消耗钻石",
+            "description": "开启后绝不点击“补签”等可能消耗钻石的入口；识别不到明确的“领取”时直接跳过。",
+            "default_case": "Yes",
+            "cases": [
+                {
+                    "name": "Yes",
+                    "label": "开启（推荐）",
+                    "pipeline_override": {
+                        "GetDailySignMakeUpPrize": { "enabled": false }
+                    }
+                },
+                {
+                    "name": "No",
+                    "label": "关闭保护",
+                    "pipeline_override": {
+                        "GetDailySignMakeUpPrize": { "enabled": true }
+                    }
+                }
+            ]
+        },
+        "好友友情币自动领取": {
+            "type": "switch",
+            "label": "好友友情币",
+            "description": "打开好友页面底部爱心，领取组队和匹配战斗产生的友情币；无可领项目时复核后跳过。",
+            "default_case": "Yes",
+            "cases": [
+                {"name":"Yes","label":"自动领取","pipeline_override":{"PrizeFriendCheck":{"enabled":true}}},
+                {"name":"No","label":"跳过","pipeline_override":{"PrizeFriendCheck":{"enabled":false},"VerifyPrizeCompleted":{"action":{"param":{"custom_action_param":{"required":["活动区域已扫描","任务区域已扫描","日常任务无未完成项","商城区域已扫描","馈赠区域已扫描"]}}}}}}
+            ]
+        },
+        "赛季活动自动领取": {
+            "type": "switch",
+            "label": "赛季活动",
+            "description": "进入赛季活动，领取登录奖励，并检查赛季巡礼的每日、每周和本期目标；只点击明确显示“领取”的按钮，不会点击购买等级或付费赐福。",
+            "default_case": "Yes",
+            "cases": [
+                { "name": "Yes", "label": "自动领取", "pipeline_override": { "EnterSeasonActivity": { "enabled": true } } },
+                { "name": "No", "label": "跳过", "pipeline_override": { "EnterSeasonActivity": { "enabled": false } } }
+            ]
+        },
+        "惊奇日签自动领取": {
+            "type":"switch","label":"惊魂派对—惊奇日签","description":"只领取当前可领日签；不补签、不购买，已领过则核对勾选标记。","default_case":"Yes",
+            "cases":[
+                {"name":"Yes","label":"自动领取","pipeline_override":{"SpookyRewardsRun":{"action":{"param":{"custom_action_param":{"sign":true}}}}}},
+                {"name":"No","label":"跳过","pipeline_override":{"SpookyRewardsRun":{"action":{"param":{"custom_action_param":{"sign":false}}}}}}
+            ]
+        },
+        "怪谈手册免费奖励": {
+            "type":"switch","label":"惊魂派对—怪谈手册免费奖励","description":"只领取已完成任务与基础轨道已解锁奖励；禁止购买等级、付费解锁、前往补任务。","default_case":"Yes",
+            "cases":[
+                {"name":"Yes","label":"自动领取","pipeline_override":{"SpookyRewardsRun":{"action":{"param":{"custom_action_param":{"manual":true}}}}}},
+                {"name":"No","label":"跳过","pipeline_override":{"SpookyRewardsRun":{"action":{"param":{"custom_action_param":{"manual":false}}}}}}
+            ]
+        },
+        "神仙假期自动领取": {
+            "type": "switch",
+            "label": "联动活动免费奖励",
+            "description": "自动识别当期联动活动，领取日签和活动手册中明确显示“领取”的每日免费奖励；不会点击购买等级、前往挑战或其他消耗入口。",
+            "default_case": "Yes",
+            "cases": [
+                { "name": "Yes", "label": "自动领取", "pipeline_override": { "EnterHolidayActivity": { "enabled": true } } },
+                { "name": "No", "label": "跳过", "pipeline_override": { "EnterHolidayActivity": { "enabled": false } } }
+            ]
+        },
+        "秘宝大作战自动领取": {
+            "type": "switch",
+            "label": "秘宝大作战",
+            "description": "是否进入秘宝大作战，领取活动礼包和获取能量页面中明确显示“领取”的奖励。",
+            "default_case": "Yes",
+            "cases": [
+                { "name": "Yes", "label": "自动领取", "pipeline_override": { "EnterSecretPage": { "enabled": true } } },
+                { "name": "No", "label": "跳过", "pipeline_override": { "EnterSecretPage": { "enabled": false } } }
+            ]
+        },
+        "每日签到自动领取": {
+            "type": "switch",
+            "label": "每日签到",
+            "description": "是否进入每日签到并领取当天明确显示“领取”的奖励；是否允许补签仍由“禁止消耗钻石”控制。",
+            "default_case": "Yes",
+            "cases": [
+                { "name": "Yes", "label": "自动领取", "pipeline_override": { "EnterDailySignPage": { "enabled": true } } },
+                { "name": "No", "label": "跳过", "pipeline_override": { "EnterDailySignPage": { "enabled": false } } }
+            ]
+        },
+        "日常任务自动领取": {
+            "type": "switch",
+            "label": "日常任务奖励",
+            "description": "是否进入日常任务页并领取所有明确显示“领取”的奖励。",
+            "default_case": "Yes",
+            "cases": [
+                { "name": "Yes", "label": "自动领取", "pipeline_override": { "DailyTaskPage": { "enabled": true } } },
+                { "name": "No", "label": "跳过", "pipeline_override": { "DailyTaskPage": { "enabled": false } } }
+            ]
+        },
+        "周常任务自动领取": {
+            "type": "switch",
+            "label": "周常任务奖励",
+            "description": "是否进入周常任务页并领取所有明确显示“领取”的奖励。",
+            "default_case": "Yes",
+            "cases": [
+                { "name": "Yes", "label": "自动领取", "pipeline_override": { "WeeklyTaskPage": { "enabled": true } } },
+                { "name": "No", "label": "跳过", "pipeline_override": { "WeeklyTaskPage": { "enabled": false } } }
+            ]
+        },
+        "委托自动处理": {
+            "type": "switch",
+            "label": "委托",
+            "description": "开启后使用委托任务的免费次数和重金优先保护，支持已识别的地图战斗和材料获取。",
+            "default_case": "No",
+            "cases": [
+                { "name": "No", "label": "跳过（推荐）", "pipeline_override": { "CommissionPage": { "enabled": false } } },
+                { "name": "Yes", "label": "自动处理", "pipeline_override": { "CommissionPage": { "enabled": true } } }
+            ]
+        },
+        "巡礼每日目标自动领取": {
+            "type": "switch",
+            "label": "巡礼每日目标",
+            "description": "是否领取巡礼目标中的每日目标奖励。",
+            "default_case": "Yes",
+            "cases": [
+                { "name": "Yes", "label": "自动领取", "pipeline_override": { "XunliDailyDestination": { "enabled": true } } },
+                { "name": "No", "label": "跳过", "pipeline_override": { "XunliDailyDestination": { "enabled": false } } }
+            ]
+        },
+        "巡礼每周目标自动领取": {
+            "type": "switch",
+            "label": "巡礼每周目标",
+            "description": "是否领取巡礼目标中的每周目标奖励。",
+            "default_case": "Yes",
+            "cases": [
+                { "name": "Yes", "label": "自动领取", "pipeline_override": { "XunliWeeklyDestination": { "enabled": true } } },
+                { "name": "No", "label": "跳过", "pipeline_override": { "XunliWeeklyDestination": { "enabled": false } } }
+            ]
+        },
+        "巡礼本期目标自动领取": {
+            "type": "switch",
+            "label": "巡礼本期目标",
+            "description": "是否领取巡礼目标中的本期目标奖励。",
+            "default_case": "Yes",
+            "cases": [
+                { "name": "Yes", "label": "自动领取", "pipeline_override": { "XunliTermDestination": { "enabled": true } } },
+                { "name": "No", "label": "跳过", "pipeline_override": { "XunliTermDestination": { "enabled": false } } }
+            ]
+        },
+        "巡礼之证自动领取": {
+            "type": "switch",
+            "label": "巡礼之证奖励",
+            "description": "是否检查巡礼之证页的红点并领取对应奖励。",
+            "default_case": "Yes",
+            "cases": [
+                { "name": "Yes", "label": "自动领取", "pipeline_override": { "XunliCertification": { "enabled": true } } },
+                { "name": "No", "label": "跳过", "pipeline_override": { "XunliCertification": { "enabled": false } } }
+            ]
+        },
+        "每日特惠自动领取": {
+            "type": "switch",
+            "label": "每日特惠",
+            "description": "进入每日特惠后，点击左上角带红色感叹号的“每日赠礼”领取免费奖励。",
+            "default_case": "Yes",
+            "cases": [
+                { "name": "Yes", "label": "自动领取", "pipeline_override": { "DailyDiscountPage": { "enabled": true } } },
+                { "name": "No", "label": "跳过", "pipeline_override": { "DailyDiscountPage": { "enabled": false } } }
+            ]
+        },
+        "本周精选自动领取": {
+            "type": "switch",
+            "label": "本周精选",
+            "description": "进入本周精选后，点击左上角带红色感叹号的“每周赠礼”领取免费奖励。",
+            "default_case": "Yes",
+            "cases": [
+                { "name": "Yes", "label": "自动领取", "pipeline_override": { "WeeklyDiscountPage": { "enabled": true } } },
+                { "name": "No", "label": "跳过", "pipeline_override": { "WeeklyDiscountPage": { "enabled": false } } }
+            ]
+        },
+        "商场全部红点奖励自动领取": {
+            "type": "switch",
+            "label": "商场全部红点奖励",
+            "description": "扫描商场列表中所有红色感叹号入口，并在详情页领取所有红点奖励；只允许点击明确的“领取”，购买对话框一律取消。",
+            "default_case": "Yes",
+            "cases": [
+                {
+                    "name": "Yes",
+                    "label": "自动领取",
+                    "pipeline_override": {
+                        "ShoppingMallRedEntry": { "enabled": true },
+                        "ShoppingMallRedEntryAfterScroll": { "enabled": true }
+                    }
+                },
+                {
+                    "name": "No",
+                    "label": "跳过",
+                    "pipeline_override": {
+                        "ShoppingMallRedEntry": { "enabled": false },
+                        "ShoppingMallRedEntryAfterScroll": { "enabled": false }
+                    }
+                }
+            ]
+        },
+        "馈赠自动领取": {
+            "type": "switch",
+            "label": "馈赠",
+            "description": "是否进入馈赠页并领取所有明确显示“领取”的奖励。",
+            "default_case": "Yes",
+            "cases": [
+                { "name": "Yes", "label": "自动领取", "pipeline_override": { "EnterPresentPage": { "enabled": true } } },
+                { "name": "No", "label": "跳过", "pipeline_override": { "EnterPresentPage": { "enabled": false } } }
+            ]
+        },
+        "国度蓝券次数": {
+            "type": "input", "label": "国度蓝券每日次数",
+            "description": "国度蓝券扭蛋：每日总次数，每次消耗10张蓝券；0为不抽取。",
+            "inputs": [{"name": "目标", "label": "国度蓝券扭蛋每日总次数", "pipeline_type": "int", "default": "0", "verify": "^(10000|[0-9]{1,4})$", "pattern_msg": "请输入0到10000"}],
+            "pipeline_override": {"GachaTargetBlue": {"action": {"param": {"custom_action_param": {"value": "{目标}"}}}}}
+        },
+        "国度紫券次数": {
+            "type": "input", "label": "国度紫券每日次数",
+            "description": "国度紫券扭蛋：每日总次数，每次消耗10张紫券；0为不抽取。",
+            "inputs": [{"name": "目标", "label": "国度紫券扭蛋每日总次数", "pipeline_type": "int", "default": "0", "verify": "^(10000|[0-9]{1,4})$", "pattern_msg": "请输入0到10000"}],
+            "pipeline_override": {"GachaTargetPurple": {"action": {"param": {"custom_action_param": {"value": "{目标}"}}}}}
+        },
+        "国度橙券次数": {
+            "type": "input", "label": "国度橙券每日次数",
+            "description": "国度橙券扭蛋：每日总次数，每次消耗10张橙券；0为不抽取。",
+            "inputs": [{"name": "目标", "label": "国度橙券扭蛋每日总次数", "pipeline_type": "int", "default": "0", "verify": "^(10000|[0-9]{1,4})$", "pattern_msg": "请输入0到10000"}],
+            "pipeline_override": {"GachaTargetOrange": {"action": {"param": {"custom_action_param": {"value": "{目标}"}}}}}
+        },
+        "国度金券次数": {
+            "type": "input", "label": "国度金券每日次数",
+            "description": "国度金券扭蛋：每日总次数，每次消耗10张金券；0为不抽取。",
+            "inputs": [{"name": "目标", "label": "国度金券扭蛋每日总次数", "pipeline_type": "int", "default": "0", "verify": "^(10000|[0-9]{1,4})$", "pattern_msg": "请输入0到10000"}],
+            "pipeline_override": {"GachaTargetGold": {"action": {"param": {"custom_action_param": {"value": "{目标}"}}}}}
+        },
+        "高阶祈愿次数": {
+            "type": "input", "label": "高阶祈愿每日次数",
+            "description": "高阶祈愿：每日总次数，单次消耗1个高阶祈愿道具；0为不祈愿。",
+            "inputs": [{"name": "目标", "label": "高阶祈愿每日总次数", "pipeline_type": "int", "default": "0", "verify": "^(10000|[0-9]{1,4})$", "pattern_msg": "请输入0到10000"}],
+            "pipeline_override": {"WishTargetAdvanced": {"action": {"param": {"custom_action_param": {"value": "{目标}"}}}}}
+        },
+        "常驻祈愿次数": {
+            "type": "input", "label": "常驻祈愿每日次数",
+            "description": "常驻祈愿：每日总次数，单次消耗1个常驻祈愿道具；0为不祈愿。",
+            "inputs": [{"name": "目标", "label": "常驻祈愿每日总次数", "pipeline_type": "int", "default": "0", "verify": "^(10000|[0-9]{1,4})$", "pattern_msg": "请输入0到10000"}],
+            "pipeline_override": {"WishTargetRegular": {"action": {"param": {"custom_action_param": {"value": "{目标}"}}}}}
+        },
+        "友情祈愿次数": {
+            "type": "input", "label": "友情祈愿每日次数",
+            "description": "友情祈愿：每日总次数，单次消耗25友情币；0为不祈愿。",
+            "inputs": [{"name": "目标", "label": "友情祈愿每日总次数", "pipeline_type": "int", "default": "0", "verify": "^(10000|[0-9]{1,4})$", "pattern_msg": "请输入0到10000"}],
+            "pipeline_override": {"WishTargetFriend": {"action": {"param": {"custom_action_param": {"value": "{目标}"}}}}}
+        },
+        "每日结缘次数": {
+            "type": "input",
+            "label": "每日结缘次数",
+            "description": "按游戏显示的今日累计次数执行；包含手动结缘。默认0为不结缘，每次消耗1根结缘绳。",
+            "inputs": [{"name": "结缘目标", "label": "每日总次数", "pipeline_type": "int", "default": "0", "verify": "^(10000|[0-9]{1,4})$", "pattern_msg": "请输入0到10000"}],
+            "pipeline_override": {"WishPet": {"action": {"param": {"custom_action_param": {"target": "{结缘目标}"}}}}}
+        },
+        "购买宠物素材": {
+            "type": "switch",
+            "label": "购买宠物素材",
+            "default_case": "No",
+            "cases": [
+                {
+                    "name": "Yes",
+                    "pipeline_override": {
+                        "ExchangePetResourcePage": {
+                            "enabled": true
+                        }
+                    },
+                    "option": [
+                        "选择宠物素材"
+                    ]
+                },
+                {
+                    "name": "No",
+                    "pipeline_override": {
+                        "ExchangePetResourcePage": {
+                            "enabled": false
+                        }
+                    }
+                }
+            ]
+        },
+        "选择宠物素材": {
+            "type": "select",
+            "label": "选择宠物素材",
+            "default_case": "羊毛",
+            "cases": [
+                {
+                    "name": "羊毛",
+                    "pipeline_override": {
+                        "PurplePetResourceNotSoldout": {
+                            "recognition": {
+                                "param": {
+                                    "roi": [
+                                        30,
+                                        898,
+                                        204,
+                                        255
+                                    ]
+                                }
+                            },
+                            "action": {
+                                "param": {
+                                    "target": [
+                                        98,
+                                        1101,
+                                        70,
+                                        32
+                                    ]
+                                }
+                            }
+                        },
+                        "OrangePetResourceNotSoldout": {
+                            "recognition": {
+                                "param": {
+                                    "roi": [
+                                        28,
+                                        614,
+                                        208,
+                                        257
+                                    ]
+                                }
+                            },
+                            "action": {
+                                "param": {
+                                    "target": [
+                                        100,
+                                        818,
+                                        68,
+                                        35
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "鸡蛋",
+                    "pipeline_override": {
+                        "PurplePetResourceNotSoldout": {
+                            "recognition": {
+                                "param": {
+                                    "roi": [
+                                        258,
+                                        899,
+                                        202,
+                                        249
+                                    ]
+                                }
+                            },
+                            "action": {
+                                "param": {
+                                    "target": [
+                                        329,
+                                        1103,
+                                        73,
+                                        30
+                                    ]
+                                }
+                            }
+                        },
+                        "OrangePetResourceNotSoldout": {
+                            "recognition": {
+                                "param": {
+                                    "roi": [
+                                        257,
+                                        615,
+                                        206,
+                                        254
+                                    ]
+                                }
+                            },
+                            "action": {
+                                "param": {
+                                    "target": [
+                                        331,
+                                        820,
+                                        69,
+                                        30
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "精油",
+                    "pipeline_override": {
+                        "PurplePetResourceNotSoldout": {
+                            "recognition": {
+                                "param": {
+                                    "roi": [
+                                        486,
+                                        616,
+                                        208,
+                                        254
+                                    ]
+                                }
+                            },
+                            "action": {
+                                "param": {
+                                    "target": [
+                                        560,
+                                        820,
+                                        68,
+                                        31
+                                    ]
+                                }
+                            }
+                        },
+                        "OrangePetResourceNotSoldout": {
+                            "recognition": {
+                                "param": {
+                                    "roi": [
+                                        488,
+                                        335,
+                                        203,
+                                        252
+                                    ]
+                                }
+                            },
+                            "action": {
+                                "param": {
+                                    "target": [
+                                        558,
+                                        538,
+                                        75,
+                                        31
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}

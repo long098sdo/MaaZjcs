@@ -1,0 +1,6 @@
+{
+    "FinishIronWithoutUse": { "enabled": false, "next": ["LeaveCurrentPage"] },
+    "FinishGoldWithoutUse": { "enabled": false, "next": ["LeaveCurrentPage"] },
+    "FinishMonsterWithoutUse": { "enabled": false, "next": ["LeaveCurrentPage"] },
+    "FinishGravelWithoutUse": { "enabled": false, "next": ["LeaveCurrentPage"] }
+}
