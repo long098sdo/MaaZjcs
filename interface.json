@@ -1000,7 +1000,7 @@
                 "InputAutoCount": {
                     "action": {
                         "param": {
-                            "input_text": "{次数}"
+                            "custom_action_param": {"count": "{次数}"}
                         }
                     }
                 }

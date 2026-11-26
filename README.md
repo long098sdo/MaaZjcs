@@ -11,7 +11,7 @@
 
 ## 更新与反馈
 
-候选版使用手动更新。将新版本解压到新目录，再选设备和配置任务。测试期间保留旧目录，以便回退。
+通过 `启动杖剑自动化.cmd` 启动时会在后台检查 GitHub Releases。发现带有 Windows x64 ZIP 的新版时，MFA 标题栏会出现「检测到新版本」，点击后可确认打开下载页。也可双击 `检查更新.cmd` 立即查询。正式版只提示正式更新，测试版也会提示更新的测试包。下载后解压到新目录，旧目录可用于保留配置及回退。
 
 反馈时注明版本、游戏渠道、MuMu 版本、失败任务及时间，附对应的 `logs/log-日期.log` 片段及失败截图。分享前请遮盖玩家编号、私聊和本机路径。
 
@@ -19,8 +19,6 @@
 
 根目录 `LICENSE` 为项目原有许可；组件的许可和来源见 `THIRD-PARTY-NOTICES.md`。
 
-## 本仓库与发行包
+## GitHub 发行与维护
 
-本仓库提供项目编排、识别流程和 Python 源码。源码目录用于审阅和开发，运行版通过 GitHub Releases 分发。游戏截图识别模板、OCR 模型和第三方 Windows 运行文件均独立于源码目录。首次公开发行正在准备。
-
-Windows 候选版使用官方 MFAAvalonia v2.16.6，对应源码提交为 [8646e0c](https://github.com/MaaXYZ/MFAAvalonia/tree/8646e0c34fa1fc52cd32505bc2020bae7da9d76a)。
+Windows 运行包与 MFA 对应源码见 [GitHub Releases](https://github.com/long098sdo/MaaZjcs/releases)。本仓库主要提供任务编排和更新检测源码，便携包另外包含运行所需的识别资源和依赖。版本变化及校验值见 [维护记录](CHANGELOG.md)。

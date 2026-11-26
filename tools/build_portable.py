@@ -1,6 +1,7 @@
 """Build a clean Windows x64 distribution with local Python and .NET runtimes."""
 import argparse
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -28,7 +29,9 @@ stage = OUTPUT / ('杖剑自动化-Windows64-' + stamp)
 stage.mkdir(parents=True, exist_ok=False)
 
 project_files = ('agent', 'resource', 'interface.json', 'README.md', 'LICENSE',
-                 'THIRD-PARTY-NOTICES.md', 'tools/ensure_mumu_ready.py')
+                 'THIRD-PARTY-NOTICES.md', 'tools/ensure_mumu_ready.py', 'tools/check_update.py',
+                 'tools/UpdateTitleHook.cs',
+                 '启动杖剑自动化.cmd', '检查更新.cmd')
 local_runtime = ('libs', 'plugins', 'runtimes', 'MFAAvalonia.exe', 'MFAAvalonia.dll',
                  'MFAAvalonia.deps.json', 'MFAAvalonia.runtimeconfig.json', 'libloader.dll',
                  'DependencySetup_依赖库安装_win.bat')
@@ -44,6 +47,11 @@ for name in project_files if official_mfa else project_files + local_runtime:
     else:
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(item, target)
+
+compiler = Path(os.environ['WINDIR']) / 'Microsoft.NET/Framework64/v4.0.30319/csc.exe'
+subprocess.run([str(compiler), '/nologo', '/target:library', '/codepage:65001',
+                '/out:MaaZjcs.UpdateTitleHook.dll', 'UpdateTitleHook.cs'],
+               cwd=stage / 'tools', check=True)
 
 shutil.copytree(ROOT / 'android' / 'licenses' / 'project', stage / 'licenses')
 if official_mfa:
@@ -124,14 +132,6 @@ instance = {
     **{f'Timer.Timer{i}': 'False' for i in range(1, 9)},
 }, ensure_ascii=False, indent=2), encoding='utf-8')
 
-(stage / '启动杖剑自动化.cmd').write_text(
-    '@echo off\r\nchcp 65001 >nul\r\ncd /d "%~dp0"\r\n'
-    'set "DOTNET_ROOT=%~dp0portable\\dotnet"\r\n'
-    'set "DOTNET_ROOT_X64=%~dp0portable\\dotnet"\r\n'
-    'set "PATH=%~dp0portable\\python;%~dp0portable\\dotnet;%PATH%"\r\n'
-    'set "PYTHONHOME=%~dp0portable\\python"\r\n'
-    'set "PYTHONNOUSERSITE=1"\r\n'
-    'start "" "%~dp0MFAAvalonia.exe"\r\n', encoding='utf-8')
 (stage / '使用说明.txt').write_text('''杖剑自动化便携版（Windows 64 位）
 
 1. 将整个压缩包解压到可写的文件夹，不要在压缩包内直接运行。
@@ -140,6 +140,7 @@ instance = {
 4. 在任务管理器上方选择模拟器，搜索设备并选择自己的 MuMu 设备，然后连接。
    若没有找到设备，检查 MuMu 的 ADB 调试是否开启，并重新搜索。
 5. 先设置各项任务的次数和购买选项，再勾选需要运行的任务并点击开始。
+6. 每次启动时后台检查 GitHub 更新。发现新版，MFA 标题栏会显示提示，点击可打开下载页。也可双击“检查更新.cmd”立即查询。
 
 分发版所有任务默认未勾选，定时器、补跑和自动启动均已关闭。
 联动拼图禁止使用道具。购买素材、商店购买、公会捐赠等应先检查配置。
