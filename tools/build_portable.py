@@ -17,9 +17,14 @@ parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--version', required=True, help='Version written into the Windows release')
 parser.add_argument('--official-mfa-archive', type=Path,
                     help='Use the official MFA v2.16.6 Windows x64 ZIP instead of local binaries')
+parser.add_argument('--maafw-source', type=Path,
+                    help='Official MaaFramework v5.14.3 source ZIP for the matching Python bindings')
 args = parser.parse_args()
 official_mfa = args.official_mfa_archive
+maafw_source = args.maafw_source
 if official_mfa:
+    if not maafw_source:
+        parser.error('Official MFA v2.16.6 requires the matching MaaFramework v5.14.3 source ZIP')
     with official_mfa.open('rb') as archive_file:
         digest = file_digest(archive_file, 'sha256').hexdigest()
     if digest != '01c5bd3747c50e1d302a69e4c5b728b956e4b3ede5eedfdb19afe546de072313':
@@ -42,8 +47,10 @@ for name in project_files if official_mfa else project_files + local_runtime:
     item = ROOT / name
     target = stage / name
     if item.is_dir():
-        shutil.copytree(item, target,
-                        ignore=shutil.ignore_patterns('__pycache__', '*.pyc'))
+        patterns = ['__pycache__', '*.pyc']
+        if name == 'agent' and official_mfa:
+            patterns.extend(('maa', 'maafw-*.dist-info'))
+        shutil.copytree(item, target, ignore=shutil.ignore_patterns(*patterns))
     else:
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(item, target)
@@ -55,6 +62,20 @@ subprocess.run([str(compiler), '/nologo', '/target:library', '/codepage:65001',
 
 shutil.copytree(ROOT / 'android' / 'licenses' / 'project', stage / 'licenses')
 if official_mfa:
+    maa_package = stage / 'agent/vendor/maa'
+    python_prefix = 'MaaFramework-5.14.3/source/binding/Python/maa/'
+    with zipfile.ZipFile(maafw_source) as bindings:
+        bindings.getinfo(python_prefix + '__init__.py')
+        for name in bindings.namelist():
+            if name.startswith(python_prefix) and name.endswith('.py'):
+                relative = Path(name.removeprefix(python_prefix))
+                if relative.is_absolute() or '..' in relative.parts:
+                    raise ValueError('Invalid MaaFramework Python binding path')
+                target = maa_package / relative
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_bytes(bindings.read(name))
+        (maa_package / 'LICENSE.md').write_bytes(bindings.read('MaaFramework-5.14.3/LICENSE.md'))
+    shutil.copytree(stage / 'runtimes/win-x64/native', maa_package / 'bin')
     commit = '8646e0c34fa1fc52cd32505bc2020bae7da9d76a'
     (stage / 'MFA-SOURCE.md').write_text(
         '# MFAAvalonia v2.16.6\n\n'
@@ -62,6 +83,7 @@ if official_mfa:
         f'- [对应源码（{commit}）](https://github.com/MaaXYZ/MFAAvalonia/tree/{commit})\n'
         '- [官方发行文件](https://github.com/MaaXYZ/MFAAvalonia/releases/tag/v2.16.6)\n'
         f'- 官方 Windows x64 ZIP 的 SHA-256：`{digest}`\n'
+        '- [MaaFramework v5.14.3 Python 源码](https://github.com/MaaXYZ/MaaFramework/tree/v5.14.3/source/binding/Python/maa)。Python 端的 Windows DLL 取自同一个官方 MFA ZIP。\n'
         '- GPL-3.0 许可文本：`licenses/LICENSE-MFA-GPL-3.0`\n',
         encoding='utf-8')
 
@@ -80,6 +102,9 @@ for name in ('python.exe', 'pythonw.exe', 'python311.dll', 'python3.dll',
 for name in ('Lib', 'DLLs'):
     shutil.copytree(python_home / name, python_target / name,
                     ignore=shutil.ignore_patterns('site-packages', '__pycache__', '*.pyc', 'test', 'tests'))
+for name in ('tcl8.6', 'tcl8', 'tk8.6'):
+    shutil.copytree(python_home / 'tcl' / name, python_target / 'tcl' / name,
+                    ignore=shutil.ignore_patterns('demos'))
 
 dotnet_home = Path(r'C:\Program Files\dotnet')
 dotnet_target = stage / 'portable' / 'dotnet'
@@ -140,7 +165,7 @@ instance = {
 4. 在任务管理器上方选择模拟器，搜索设备并选择自己的 MuMu 设备，然后连接。
    若没有找到设备，检查 MuMu 的 ADB 调试是否开启，并重新搜索。
 5. 先设置各项任务的次数和购买选项，再勾选需要运行的任务并点击开始。
-6. 每次启动时后台检查 GitHub 更新。发现新版，MFA 标题栏会显示提示，点击可打开下载页。也可双击“检查更新.cmd”立即查询。
+6. 每次启动时后台检查更新。标题栏出现新版提示后，点击可在更新窗口直接下载。也可双击“检查更新.cmd”立即查询。
 
 分发版所有任务默认未勾选，定时器、补跑和自动启动均已关闭。
 联动拼图禁止使用道具。购买素材、商店购买、公会捐赠等应先检查配置。

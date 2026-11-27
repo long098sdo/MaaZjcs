@@ -24,7 +24,7 @@ public static class StartupHook
                 if (check == null || !check.WaitForExit(30000))
                     return;
                 latest = check.StandardOutput.ReadToEnd().Trim();
-                if (check.ExitCode != 0 || !Regex.IsMatch(latest, @"\Av?\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?\z"))
+                if (check.ExitCode != 0 || !Regex.IsMatch(latest, @"\Av?\d+\.\d+(?:\.\d+)?(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?\z"))
                     return;
             }
 

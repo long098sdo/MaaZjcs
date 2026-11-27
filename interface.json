@@ -7,7 +7,7 @@
     "license": "MIT",
     "welcome": "欢迎使用 MaaZjcs!",
     "github": "https://github.com/long098sdo/MaaZjcs",
-    "version": "v0.0.1-local",
+    "version": "v1.01",
     "agent": {
         "child_exec": "python",
         "child_args": [
