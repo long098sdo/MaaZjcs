@@ -24,8 +24,19 @@
     "CollabOpenLinked": {
         "recognition": { "type": "OCR", "param": { "roi": [0, 100, 720, 1040], "expected": ["联动活动","联动.*开启"] } },
         "action": { "type": "Click", "param": { "target_offset": [0, -35, 0, 100] } },
-        "next": ["[JumpBack]CollabRunPuzzle", "[JumpBack]CollabRunBattle", "End"],
+        "next": ["CollabPreheat", "[JumpBack]CollabRunPuzzle", "[JumpBack]CollabRunBattle", "End"],
         "post_delay": 1800
+    },
+    "CollabPreheat": {
+        "recognition": {"type":"OCR","param":{"roi":[180,920,360,92],"expected":["距离活动开启剩余"]}},
+        "action": {"type":"Click","param":{"target":[65,1211,18,18]}},
+        "focus": {"Node.Action.Starting":{"content":"联动活动仍在预热，尚未开放挑战，跳过本期入口","display":["log"]}},
+        "post_delay": 1000,
+        "next": ["CollabPreheatReturned"]
+    },
+    "CollabPreheatReturned": {
+        "recognition": {"type":"OCR","param":{"roi":[0,0,300,100],"expected":["活动汇总"]}},
+        "next": ["NavigationRecovery"]
     },
     "CollabRunBattle": {
         "action": { "type": "Custom", "param": { "custom_action": "collab_battle_runner" } },

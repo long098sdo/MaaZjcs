@@ -15,16 +15,29 @@ def count_from_text(value):
     if len(matches)!=1:raise RuntimeError('免费次数无法确认')
     return int(matches[0])
 
-def read_commission_progress(ctx, frame, node):
+def read_commission_progress(ctx, frame, node, pipeline_override=None):
     """Read progress even when OCR includes the nearby progress label."""
-    detail=ctx.run_recognition(node,frame)
+    detail=ctx.run_recognition(node,frame,pipeline_override) if pipeline_override else ctx.run_recognition(node,frame)
     pairs=[]
     for result in getattr(detail,'all_results',[]) if detail else []:
         value=re.sub(r'\s+','',str(getattr(result,'text','')))
-        match=re.fullmatch(r'(?:(?:击杀数量|数量|量)[:：]?)?(\d{1,2})[/／](\d{1,2})',value)
+        match=re.fullmatch(r'(?:(?:当前数量|击杀数量|数量|量)[:：]?)?(\d{1,2})[/／](\d{1,2})',value)
         if match:pairs.append(tuple(map(int,match.groups())))
     if len(set(pairs))!=1:raise RuntimeError('委托进度无法唯一识别')
     return pairs[0]
+
+def map_tracker(ctx, frame):
+    gear = locate(ctx, 'CommissionMapGear', frame)
+    if not gear:
+        raise RuntimeError('未识别到地图委托托管齿轮')
+    x, y, width, height = rect(gear.box)
+    center = x + width // 2, y + height // 2
+    node = 'CommissionMapProgress'
+    override = {node: {'recognition': {'param': {'roi': [93, center[1] - 19, 54, 39]}}}}
+    done, total = read_commission_progress(ctx, frame, node, override)
+    if not 0 <= done <= total <= 20 or total == 0:
+        raise RuntimeError(f'地图委托进度不合理：{done}/{total}')
+    return done, total, center
 
 def all_results(detail):
     return getattr(detail,'filtered_results',[]) if detail else []
@@ -282,9 +295,16 @@ class CommissionSafe(CustomAction):
         self.wait(ctx,controller,'CommissionMapConfirm')
         if not controller.post_click(493,737).wait().succeeded:raise RuntimeError('前往确认失败')
         time.sleep(2)
-        self.wait(ctx,controller,'CommissionMapProgress',25)
-        time.sleep(2)  # The tracker can render before map controls respond.
-        if not controller.post_click(269,938).wait().succeeded:raise RuntimeError('打开委托托管失败')
+        deadline = time.monotonic() + 25
+        while True:
+            try:
+                _, map_total, gear = map_tracker(ctx, _capture(controller))
+                break
+            except RuntimeError as error:
+                if time.monotonic() >= deadline:
+                    raise RuntimeError(f'到达委托地图后未确认进度栏：{error}') from error
+                time.sleep(.5)
+        if not controller.post_click(*gear).wait().succeeded:raise RuntimeError('打开委托托管失败')
         frame=_capture(controller);self.wait(ctx,controller,'CommissionCollectHostTitle' if title.startswith('收集') else 'CommissionHostTitle')
         frame=_capture(controller)
         collect=title.startswith('收集')
@@ -299,7 +319,7 @@ class CommissionSafe(CustomAction):
         else:valid_amount=values==[str(total-done)]
         if 0 <= available < cost and cost > 0:
             raise RuntimeError(f'体力不足：托管需要{cost}点，当前只有{available}点；请将委托排在耗尽体力的任务之前')
-        if not (0<=done<total<=20 and 0<cost<=available<=300 and valid_amount):
+        if not (0<=done<total==map_total and 0<cost<=available<=300 and valid_amount):
             raise RuntimeError(f'托管进度、数量或体力不明确：{done}/{total}，{cost}/{available}，{values}')
         start=self.wait(ctx,controller,'CommissionCollectStart' if collect else 'CommissionHostStart')
         bx,by,bw,bh=rect(start.box)
@@ -309,14 +329,14 @@ class CommissionSafe(CustomAction):
         while time.monotonic()<deadline:
             time.sleep(3)
             try:
-                progress,maximum=read_ratio(ctx,_capture(controller),'CommissionMapProgress')
+                progress,maximum,gear=map_tracker(ctx,_capture(controller))
                 if maximum==total and progress==total:break
             except RuntimeError:pass
         else:raise RuntimeError('托管未确认完成，停止且不切换页面')
         # Completion counter can update before hosting ends; inspect the gear
         # and require the original Start button, not the End hosting button.
         time.sleep(2)
-        if not controller.post_click(269,938).wait().succeeded:raise RuntimeError('托管结束复核失败')
+        if not controller.post_click(*gear).wait().succeeded:raise RuntimeError('托管结束复核失败')
         self.wait(ctx,controller,'CommissionCollectStart' if collect else 'CommissionHostStart',10)
         if not controller.post_click(360,1120).wait().succeeded:raise RuntimeError('关闭托管面板失败')
         time.sleep(.5)

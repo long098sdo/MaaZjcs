@@ -44,8 +44,15 @@ def role_key(context, controller):
         raise ValueError('未确认家园，不能读取角色')
     if not controller.post_click(55, 55).wait().succeeded:
         raise ValueError('无法打开角色资料')
-    time.sleep(1)
-    player = read_player_number(context, _capture(controller))
+    deadline = time.monotonic() + 8
+    while True:
+        time.sleep(.5)
+        try:
+            player = read_player_number(context, _capture(controller))
+            break
+        except ValueError:
+            if time.monotonic() >= deadline:
+                raise
     if not controller.post_click(360, 120).wait().succeeded:
         raise ValueError('无法关闭角色资料')
     time.sleep(1)
@@ -138,11 +145,16 @@ class WishRunner(CustomAction):
                         current, _ = read_daily_counter(context, frame, 'DrawWishTodayCounter', '祈愿')
                         if current != state.global_count:
                             raise ValueError('检测到无法归属的手动祈愿')
-                        if number(context, 'DrawWishSingleCost', frame) != unit or number(context, balance, frame) < unit:
-                            raise ValueError(f'{pool}道具余额或费用不足')
-                        button = hit(context, 'DrawWishSingleButton', frame)
+                        button = hit(context, 'DrawWishCompactSingleButton', frame)
+                        cost_node = 'DrawWishCompactSingleCost' if button else 'DrawWishSingleCost'
+                        if not button:
+                            button = hit(context, 'DrawWishSingleButton', frame)
                         if not button:
                             raise ValueError(f'{pool}单次按钮未确认')
+                        if number(context, cost_node, frame) != unit:
+                            raise ValueError(f'{pool}单次费用与预期不符')
+                        if number(context, balance, frame) < unit:
+                            raise ValueError(f'{pool}道具余额不足')
                         journal.begin(account, state.cycle, current, pool, targets[pool])
                         click_box(controller, button)
                         deadline = time.monotonic() + 25

@@ -4,6 +4,7 @@ import json
 from maa.custom_action import CustomAction
 from maa.custom_recognition import CustomRecognition
 from collab_activity import ContextController, _capture
+from home_coordinates import open_home_destination
 
 _swipe_counts = {}
 _feile_left_edges = set()
@@ -188,6 +189,8 @@ class StoreSearch(CustomAction):
     def run(self, context, argv):
         controller = ContextController(context)
         try:
+            if open_home_destination(context, controller, '商店'):
+                return True
             for step in range(24):
                 frame = _capture(controller)
                 if not locate(context, 'GameAlreadyRunningMainTab', frame):

@@ -1,0 +1,18 @@
+{
+  "HomeCoordinatePage": {
+    "recognition": {
+      "type": "OCR",
+      "param": {"roi": [315, 1232, 100, 48], "expected": ["^家园$"]}
+    }
+  },
+  "HomeCoordinateAnchor": {
+    "recognition": {
+      "type": "TemplateMatch",
+      "param": {
+        "roi": [324, 650, 360, 290],
+        "template": ["furniture/airship2.png", "furniture/airship1.png", "furniture/airship3.png"],
+        "threshold": 0.78
+      }
+    }
+  }
+}

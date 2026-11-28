@@ -10,6 +10,7 @@ from daily_draw_limits import read_daily_counter, parse_gacha_result_counter
 from draw_feature_config import validate_targets, COUNTRY_NODES, read_node_targets
 from draw_quota_journal import QuotaJournal
 from draw_wish import ROOT, hit, click_box, role_key
+from home_coordinates import open_home_destination
 
 COUNTRY = ('国度蓝券', '国度紫券', '国度橙券', '国度金券')
 CARDS = {
@@ -77,6 +78,8 @@ def wait_result_return(context, controller, timeout=15):
 
 
 def open_gacha(context, controller):
+    if open_home_destination(context, controller, '时光扭蛋机'):
+        return
     for step in range(16):
         frame = _capture(controller)
         if not hit(context, 'GameAlreadyRunningMainTab', frame):

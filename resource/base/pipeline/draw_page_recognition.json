@@ -224,6 +224,18 @@
       }
     }
   },
+  "DrawWishCompactSingleButton": {
+    "recognition": {
+      "type": "OCR",
+      "param": { "roi": [24, 948, 102, 60], "expected": ["^祈愿1次$"] }
+    }
+  },
+  "DrawWishCompactSingleCost": {
+    "recognition": {
+      "type": "OCR",
+      "param": { "roi": [153, 952, 61, 57], "expected": ["^[0-9]+$"] }
+    }
+  },
   "DrawWishSingleCost": {
     "recognition": {
       "type": "OCR",

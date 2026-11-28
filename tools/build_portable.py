@@ -33,7 +33,7 @@ stamp = datetime.now().strftime('%Y%m%d-%H%M%S')
 stage = OUTPUT / ('杖剑自动化-Windows64-' + stamp)
 stage.mkdir(parents=True, exist_ok=False)
 
-project_files = ('agent', 'resource', 'interface.json', 'README.md', 'LICENSE',
+project_files = ('agent', 'resource', 'interface.json', 'README.md', 'CHANGELOG.md', 'LICENSE',
                  'THIRD-PARTY-NOTICES.md', 'tools/ensure_mumu_ready.py', 'tools/check_update.py',
                  'tools/UpdateTitleHook.cs',
                  '启动杖剑自动化.cmd', '检查更新.cmd')

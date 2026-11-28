@@ -553,26 +553,16 @@
                 ]
             }
         },
-        "action": {
-            "type": "Click",
-            "param": {
-                "target": [
-                    350,
-                    754,
-                    20,
-                    20
-                ]
-            }
-        },
         "next": [
             "InputAutoCount"
         ]
     },
     "InputAutoCount": {
         "action": {
-            "type": "InputText",
+            "type": "Custom",
             "param": {
-                "input_text": "6" // 默认6次
+                "custom_action": "energy_select_all_verified",
+                "custom_action_param": {"count": "6"}
             }
         },
         "next": [
@@ -583,7 +573,8 @@
         "action":{"type":"Custom","param":{"custom_action":"energy_record_plan"}},
         "next":["EnergyStartVerified"]
     },
-    "EnergyCostNumbers": {"recognition":{"type":"OCR","param":{"roi":[450,580,160,65],"expected":["[0-9]+[/／][0-9]+"]}}},
+    "EnergyCollectCount": {"recognition":{"type":"OCR","param":{"roi":[92,677,245,77],"expected":["^[采採]集次数\\s*[0-9]+[/／][0-9]+$"]}}},
+    "EnergyCostNumbers": {"recognition":{"type":"OCR","param":{"roi":[425,577,170,65],"expected":["[0-9]+[/／][0-9]+"]}}},
     "EnergyKeyboardDone":{"recognition":{"type":"OCR","param":{"roi":[530,1170,190,110],"expected":["^确定$"]}}},
     "EnergyMainNumbers": {"recognition":{"type":"OCR","param":{"roi":[610,20,105,70],"expected":["[0-9]+[/／][0-9]+"]}}},
     "EnergyStartVerified": {
@@ -602,15 +593,7 @@
             }
         },
         "action": {
-            "type": "Click",
-            "param": {
-                "target": [
-                    344,
-                    838,
-                    32,
-                    18
-                ]
-            }
+            "type": "Click"
         },
         "next": ["VerifyEnergyStarted", "VerifyEnergyReturnedMap"],
         "post_delay": 1500

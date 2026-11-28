@@ -15,17 +15,18 @@
  ,"CommissionMapConfirm":{"recognition":{"type":"OCR","param":{"roi":[140,520,450,130],"expected":["是否立即前往地图","是否进入.*进行探索","^是否进入山之国进探索[?？]?$"]}}}
  ,"CommissionMapCancel":{"recognition":{"type":"OCR","param":{"roi":[100,700,250,75],"expected":["^取消$"]}}}
  ,"CommissionAcquireChoice":{"recognition":{"type":"OCR","param":{"roi":[90,690,250,100],"expected":["前往获取"]}}}
- ,"CommissionMapProgress":{"recognition":{"type":"OCR","param":{"roi":[94,923,53,32],"only_rec":true,"expected":["[0-9]+[/／][0-9]+"]}}}
+ ,"CommissionMapGear":{"recognition":{"type":"TemplateMatch","param":{"roi":[242,820,60,230],"template":"button/auto_button.png","threshold":0.85}}}
+ ,"CommissionMapProgress":{"recognition":{"type":"OCR","param":{"roi":[93,888,54,39],"only_rec":true,"expected":["^[0-9]+[/／][0-9]+$"]}}}
  ,"CommissionHostTitle":{"recognition":{"type":"OCR","param":{"roi":[260,395,200,70],"expected":["^托管$"]}}}
  ,"CommissionCollectHostTitle":{"recognition":{"type":"OCR","param":{"roi":[260,290,200,75],"expected":["^托管$"]}}}
  ,"CommissionHostProgress":{"recognition":{"type":"OCR","param":{"roi":[355,625,110,55],"expected":["[0-9]+[/／][0-9]+"]}}}
  ,"CommissionHostCost":{"recognition":{"type":"OCR","param":{"roi":[470,695,150,55],"expected":["[0-9]+[/／][0-9]+"]}}}
  ,"CommissionHostAmount":{"recognition":{"type":"OCR","param":{"roi":[310,795,100,45],"expected":["^[0-9]+$"]}}}
  ,"CommissionHostStart":{"recognition":{"type":"OCR","param":{"roi":[230,870,260,70],"expected":["^开始托管$"]}}}
- ,"CommissionCollectProgress":{"recognition":{"type":"OCR","param":{"roi":[395,538,50,30],"only_rec":true,"expected":["[0-9]+[/／][0-9]+"]}}}
+ ,"CommissionCollectProgress":{"recognition":{"type":"OCR","param":{"roi":[255,512,235,60],"expected":["[0-9]+[/／][0-9]+"]}}}
  ,"CommissionCollectCost":{"recognition":{"type":"OCR","param":{"roi":[470,590,150,60],"expected":["[0-9]+[/／][0-9]+"]}}}
- ,"CommissionCollectExpected":{"recognition":{"type":"OCR","param":{"roi":[460,650,100,50],"expected":["^[0-9]+$"]}}}
- ,"CommissionCollectAmount":{"recognition":{"type":"OCR","param":{"roi":[310,750,100,50],"expected":["^[0-9]+$"]}}}
+ ,"CommissionCollectExpected":{"recognition":{"type":"OCR","param":{"roi":[474,638,69,61],"only_rec":true,"expected":["^[0-9]+$"]}}}
+ ,"CommissionCollectAmount":{"recognition":{"type":"OCR","param":{"roi":[310,733,100,68],"expected":["^[0-9]+$"]}}}
  ,"CommissionCollectStart":{"recognition":{"type":"OCR","param":{"roi":[230,815,260,70],"expected":["^开始托管$"]}}}
  ,"CommissionReturnMenu":{"recognition":{"type":"TemplateMatch","param":{"roi":[619,971,92,72],"template":"button/daily_entry.png"}},"action":{"type":"Click"},"post_delay":800,"next":["CommissionReturnTasks"]}
  ,"CommissionReturnTasks":{"recognition":{"type":"OCR","param":{"expected":["^任务$"]}},"action":{"type":"Click"},"post_delay":1000,"next":["CommissionReturnTab"]}

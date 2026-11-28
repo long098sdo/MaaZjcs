@@ -111,9 +111,10 @@ def download(tag, asset, directory, report_progress, cancelled):
             temporary.unlink(missing_ok=True)
 
 
-def show_update_window(current, latest, asset):
+def show_update_window(current, latest, asset, notes):
     import tkinter as tk
     from tkinter import ttk
+    from tkinter.scrolledtext import ScrolledText
 
     window = tk.Tk()
     window.title('MaaZjcs · 版本更新')
@@ -124,6 +125,11 @@ def show_update_window(current, latest, asset):
     content.columnconfigure(0, weight=1)
     ttk.Label(content, text=f'发现新版本 {latest}', font=('Microsoft YaHei UI', 15, 'bold')).grid(sticky='w')
     ttk.Label(content, text=f'当前版本 {current}  ·  Windows x64  ·  {asset["size"] / 1048576:.1f} MB').grid(sticky='w', pady=(8, 14))
+    ttk.Label(content, text='更新内容').grid(sticky='w')
+    changes = ScrolledText(content, width=48, height=8, wrap='word', font=('Microsoft YaHei UI', 10))
+    changes.insert('1.0', notes.strip() if notes and notes.strip() else '该版本暂无发布注释。')
+    changes.configure(state='disabled')
+    changes.grid(sticky='ew', pady=(4, 12))
     progress = ttk.Progressbar(content, maximum=asset['size'], length=360)
     progress.grid(sticky='ew')
     status = tk.StringVar(value='下载后可从「更新下载」文件夹解压新版。')
@@ -220,8 +226,8 @@ def main():
             print(latest)
         return 0
     if latest:
-        asset = next(release_asset(r) for r in releases if r['tag_name'] == latest and not r.get('draft'))
-        show_update_window(current, latest, asset)
+        release = next(r for r in releases if r['tag_name'] == latest and release_asset(r) and not r.get('draft'))
+        show_update_window(current, latest, release_asset(release), release.get('body'))
     elif args.manual or args.show_release:
         message(f'当前 {current}，GitHub 暂无符合当前版本渠道的新版 Windows 安装包。')
     return 0

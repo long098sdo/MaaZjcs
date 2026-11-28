@@ -6,6 +6,7 @@ from maa.custom_action import CustomAction
 from collab_activity import ContextController, _capture
 from daily_draw_limits import read_daily_counter
 from draw_tree_guard import TreeGuard
+from home_coordinates import open_home_destination
 
 
 def read_balance(context, frame):
@@ -76,6 +77,8 @@ class FindTree(CustomAction):
     def run(self, context, argv):
         controller = ContextController(context)
         try:
+            if open_home_destination(context, controller, '命运之树'):
+                return True
             adjustments = 0
             for step in range(48):
                 frame = _capture(controller)
